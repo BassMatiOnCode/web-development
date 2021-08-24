@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-07-19" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-07-19" />
+<title>Navigation panel test page</title>
+<link rel="stylesheet" href="/inc/navigation-panel-1.css" />
+
+</head><body>
+
+<div id="container-01" snippet-src="toc.htm"></div>
+<div id="container-02" snippet-src="toc.htm"></div>
+
+<script type="module">
+let jobs = [ ] ;
+async function loadSnippet ( container ) {
+	try {
+		if ( typeof container === "String" ) container = document.getElementById( container );
+		let url = container.getAttribute( "snippet-src" );
+		console.log( "Requesting: ", url );
+		let job = fetch( url )
+			.then( response => response.ok ? response.text( ) : `Failed to load ${url}` ) 
+			.then( html => container.innerHTML = html )
+			.catch( err => console.warn( "Error: ", err ))
+			.finally( ( ) => console.log( `Request finished: ${url}` ));
+		jobs.push( job.catch( ( ) => { resolve( "file not found") ;  } ) );
+		}
+	catch ( e ) { console.error( e ); }
+	}
+console.log( "init start" );
+loadSnippet( document.getElementById( "container-01" ));
+loadSnippet( document.getElementById( "container-02" ));
+Promise.all( jobs )
+	.then( ( ) => console.log( "All jobs done" ))
+	.catch( ( ) => console.error( "Some job failed" ));
+
+/*
+let p = fetch( "toc.htm" )
+	.then ( response => { 
+		if ( ! response.ok ) return Promise.resolve( "resolved with failure" ) ;
+		else return Promise.resolve( "succeeded" );
+		} )
+	.then ( m => console.log( m ))
+	.catch( ( e ) => { 
+		console.warn( e ) 
+		return Promise.resolve( "resolved" );
+		} ) 
+	.finally (( ) => {  
+		console.log ( "finished loading toc.htm" );
+		} ) ;
+*/
+console.log( "init done" );
+</script>
+
+</body></html>

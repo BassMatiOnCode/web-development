@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm"version="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-04" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-16" />
+<meta name="version" content="2" />
+<meta name="categories" content="Web Design > Toolbox" />
+<meta name="tags" content="programming, web, design, toolbox, page styling, CSS" />
+<meta name="description" content="The page component consists of three elements: The page HTML template(s), the page CSS file and the page init script. If you want to modify the page layout or change behavior, you must understand how the web page is constructed on the client side." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+ 
+<title>Web Design Toolbox - Page Component Script</title>
+
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>Page Component Script</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Script Code</h2><div>
+
+<p>At the bottom of each page, a script element loads the module <tt>page.js</tt>. Here is where the magic hapens:</p>
+
+<figcaption class="listing"> Loading the page component</figcaption><pre>
+&lt;html&gt;&hellip;
+&lt;body&gt;&hellip;
+&lt;<hi>script</hi> type="module" src="<hi>/inc/page.js</hi>" &gt;&lt;/<hi>script</hi>&gt;
+&lt;/body&gt;&lt;/html&gt;</pre>
+
+<p>The page component is a JavaScript module and imports additional components:</p>
+
+<figcaption class="listing"> Imported components</figcaption><pre>
+import * as toolbar from "/inc/toolbar/toolbar-2.js" ;
+import * as navigation from "/inc/navigation/navigation-3.js" ;
+import * as collapsible from "/inc/collapsible/collapsible-5.js" ;
+import * as header from "/inc/header-2.js" ;
+import * as footer from "/inc/footer-2.js" ;
+import * as loader from "/inc/loader-4.js" ;
+</pre>
+
+<p>It can be easily guessed from the name, that a component is responsible for one of the visible container elements: header, footer, toolbar and navigation panel. Their magic is ignited with the <tt>initPage</tt> function calls:</p>
+
+<figcaption class="listing"> Page initialization</figcaption><pre>
+toolbar.initPage( );
+header.initPage( );
+footer.initPage( );
+navigation.initPage( );
+</pre>
+
+<p>The <tt>initPage</tt> functions typically create and configure standard HTML elements and their content. Some elements like the navigation panel are decorated with attributes for the loader (load-src="fragmentUrl.htm"). The loader looks for these attributes, retrieves the specified HTML fragments from the server and integrates them into the target container. For example, the navigation panel has a load instruction attribute that points to "/toc.htm", the table-of-contents file, but a page author can also make use of the loader to integrate his own document fragments.</p>
+
+<p class="note">NOTE<br/>The order of component.initPage calls is important. Toolbar and header components create container elements and insert them in front of the first BODY child element. Therefore the header must be created after the toolbar. Other components, such as footer and navigation, append elements at the end of the BODY.</p>
+
+<p>The loading is initiated by calling the <tt>loadFragments</tt> method of the loader. The function returns a JavaScript <tt>Promise</tt>. When the promise is fulfilled (i. e. when all fragments have been loaded), the <tt>then</tt> method is called:</p>
+
+<figcaption class="listing"> Loading html fragments and finalization</figcaption><pre>
+loader.loadFragments( ).then (( ) =&gt; {
+	console.log( "Loading finished" );
+	collapsible.initPage( );
+	navigation.findCurrentDocument( );
+	toolbar.createButtons( navigation, collapsible );
+	footer.addLinks( navigation );
+	} ) ;
+</pre>
+
+<p>The <tt>then</tt> method expects a function expression as first argument, here implemented as arrow function. The code initializes collapsible blocks on the page, the table-of-contents entry in the navigation panel that is associated with the current document is identified, and some related links to other pages in the site are extracted from the table of contents. Then the toolbar component creates buttons, and finally the footer is completed with a list of site navigation links.</p>
+
+<!-- Script Code --></div>
+
+<h2 cbc>Page Abstract Generator</h2><div>
+
+<p>The page component script file contains an immediately called function expression, that creates a page abstract paragraph:</p>
+
+<figcaption class="listing"> Creating the Page Abstract</figcaption><pre>
+( function initAbstract ( ) {
+    const abstract = document.getElementById( "page-abstract" );
+    if ( ! abstract ) return ;
+    const description = document.querySelector( "meta[name='description']" );
+    if ( ! description ) return ;
+    if ( ( abstract.innerText = "" +  description.getAttribute( "content" )).length === 0 ) abstract.remove( ); 
+    } )( ) ;
+</pre>
+
+<p>If you import the page module, this code runs automatically.</p>
+
+<p>The code looks for an element with a <tt>page-abstract</tt> attribute. If there is one, the content of the description META element is copied into the abstract element. This is a convenience method, because the description, which is usually read by search engines and used for indexing, does not have to be duplicated in the HTML code manually.</p>
+
+<!-- --></div>
+
+<h2 cbc>Customization</h2><div>
+
+<p>The page design is easily customizable. Just edit the component CSS files as required. Most likely you will add additional rules to <tt>page.css</tt> or tweak existing ones. For color changes, go to <tt>colors.css</tt>.</p>
+
+<p>To add additional components, &hellip;</p>
+
+<ol>
+<li>Add the component to the import list in <tt>page.js</tt>.</li>
+<li>Call the module's <tt>initPage</tt> function. Note that order of calls can matter!</li>
+<li>Add the module's post processing function calls to the <tt>loader.loadFragments( )</tt> fulfillment handler.</li>
+</ol>
+
+<p>To remove a component, &hellip;</p>
+
+<ol>
+<li>Remove the component import statement.</li>
+<li>Delete all module function calls.</li>
+</ol>
+
+<p>To change the visual appearance or behavior of components, refer to the specific component code files.</p>
+
+<!-- Customization --></div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-07-19" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-07-19" />
+<title>Navigation panel test page</title>
+<link rel="stylesheet" href="/inc/navigation-panel-1.css" />
+
+</head><body>
+
+
+<script type="module">
+import * as navigationPanel from "/inc/navigation-panel-1.js" ;
+navigationPanel.initPage( "./toc.htm" );
+import * as loader from "/inc/loader-4.js" ;
+loader.initPage( );
+let result = Promise.all( loader.requests )
+	.then ( r => console.log( r )) 
+	.catch ( r => console.warn( r ));
+console.log( "done" );
+</script>
+<script type="module" src="/inc/navigation-panel-1.js" crossorigin="anonymous"></script>
+
+</body></html>

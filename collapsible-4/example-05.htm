@@ -1,0 +1,54 @@
+<html><head>
+<style>
+[cbc] {
+	background-image : url(orange-plus-0.svg) ;
+	background-repeat : no-repeat ;
+	background-size : 0.8em ;
+	background-position : left ;
+	padding-left : 1.2em ;
+ 	white-space : nowrap ;
+	font-weight : normal ;
+	margin-top : 5px ;
+	margin-bottom : 5px ;
+	}
+
+[cbc][expand] {
+	background-image : url(orange-minus-0.svg) ;
+	}
+  
+[cbc]+* {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.6s ease-out;
+	background-color : #E0E0E0;
+	}
+</style>
+</head><body>
+<h1 cbc>Click on this to expand/collapse the content block</h1><div><p>Content</p></div>
+<h2 cbc>Click on this to expand/collapse the content block</h2><div><p>Content</p></div>
+<h3 cbc>Click on this to expand/collapse the content block</h3><div>
+content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content
+</div>
+<h4 cbc>Click on this to expand/collapse the content block</h4><div><p>Content</p></div>
+<h5 cbc>Click on this to expand/collapse the content block</h5><div><p>Content</p></div>
+<h6 cbc>Click on this to expand/collapse the content block</h6><div><p>Content</p></div>
+
+<script type="module">
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i < controllers.length; i++ ) {
+	const controller = controllers[ i ];
+	controller.addEventListener( "click", function ( ) {
+		const expanding = this.toggleAttribute( "expand" );
+		const block = this.nextElementSibling;
+		if ( expanding ) block.style.maxHeight = block.scrollHeight + "px";
+		else {
+			block.style.maxHeight = block.scrollHeight + "px" ;
+			window.requestAnimationFrame( function ( ) { 
+				block.style.maxHeight = "0px" ;
+				} ) ; } } ) ;
+	controller.nextElementSibling.addEventListener( "transitionend", function ( ) { 
+		// Remove max height limitation if block was expanded so that the block can grow further if the page layout enforces this.
+		if ( this.style.maxHeight !== "0px" ) this.style.maxHeight = "none" ;
+		} ) ; }
+</script>
+</body></html>

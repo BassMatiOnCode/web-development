@@ -1,0 +1,447 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" content="empty.htm 2021-08-23 usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-06-11" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-06-11" />
+<meta name="version" content="2" />
+<meta name="categories" content="Programming>Web Technology>CSS"/>
+<meta name="tags" content="Programming, HTML, CSS, JavaScript, Web Design, Collapsible Block" />
+<meta name="description" content="This tutorial demonstrates a way to implement collapsible blocks by controlling the CSS max-height style value." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+
+<title>Collapsible Blocks Version 4</title>
+
+</head><body><div id="page-header"></div><div id="main-toolbar"><div id="content">
+
+<h1>Collapsible Blocks Version 4</h1>
+
+<p>A previous version of collapsible blocks with transitions used the collabsible block <tt>height</tt> to collapse and expand the content. The problem with expanding a collapsed block was that the height had to be set to a known value, the height of the rendered block, determined by layout and content. But that value could only be retrieved from a visible block. The workaround was to set the block <tt>height</tt> property temporarily to <tt>auto</tt>, request a window animation frame, retrieve the calculated height, reset the <tt>height</tt> back to 0px, and then request another animation frame to set calculated height value.</p> 
+
+<p>This version uses the <tt>max-height</tt> property to avoid the convoluted scheme from above.</p>
+
+<h2 cbc="expanded">Core Idea</h2><div>
+
+<p>The idea of this version of collapsible blocks is to manipulate their <tt>max-height</tt> attribute, while leaving their <tt>height</tt> attribute untouched. Then the <tt>scroll-height</tt> always contains the correct height of the fully rendered content. If the max-height is smaller than the scroll-height, the container would normally show scroll bars, but with an <tt>overflow:hidden</tt> setting, the content is simply clipped.</p>
+
+<figcaption class="no-borders">example-01.htm</figcaption>
+<iframe src="example-01.htm"></iframe>
+
+<p>The HTML code is simple:</p>
+
+<pre>
+&lt;h4 <hi>cbc</hi>&gt;Collapsible Block Controller&lt;/h4&gt;
+&lt;div&gt;content&lt;/div&gt;
+</pre>
+
+<p>The <tt>div</tt> element is the collapsible block, and the preceding  element with a <tt>cbc</tt> attribute is the collapsible block controller.</p>
+
+<p>The controller element has a click event handler attached:</p>
+
+<pre>
+&lt;script type="module"&gt;
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i &lt; controllers.length; i++ ) {
+    controllers[ i ].addEventListener( "click", function( ) {
+        const block = this.nextElementSibling;
+        block.style.maxHeight = block.style.maxHeight ? "" : block.scrollHeight + "px";
+        } ) }
+&lt;/script&gt;
+</pre>
+
+<p>The event handler finds the collapsible block, then toggles the <tt>maxHeight</tt> value. A zero-length string is equivalent to "0px", which means that the block content is hidden, but has the advantage of being evaluated to a falsy value.</p>
+
+<p>Some CSS code is required to hide overflowing content:</p>
+
+<pre>
+[cbc]+* {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease-out;
+    }
+</pre>
+
+<p>A <tt>transition</tt> attribute on the <tt>max-height</tt> property ensures a pleasingly smooth action. You can verify proof of concept in example 1:</p>
+
+<figcaption class="no-borders">example-01.htm</figcaption>
+<iframe src="example-01.htm"></iframe>
+
+<p>But the implementation has a flaw:</p>
+
+<ol>
+<li>Make the browser window wide</li>
+<li>expand the collapsed block</li>
+<li>watch the end-of-content text disappear at the bottom</li>
+</ol>
+
+<p>A valid <tt>max-height</tt> setting prevents the expanded block from growing to fit the content, for example if you make the viewport smaller or add some content. This must be addressed by some additional code.</p>
+
+<p>The idea is to remove the <tt>max-height</tt> limitation at the end of the exansion, like so:</p>
+
+<pre>
+controller.nextElementSibling.addEventListener ( "transitionend", function ( ) { 
+    if ( this.style.maxHeight !== "0px" ) this.style.maxHeight = "none" ;
+    } ) ;
+</pre>
+
+<p>But this generates another problem: If we collapse the block by setting <tt>max-height</tt> to "0px", there is no numerical start value, which is required for a transition to function correctly.</p>
+
+<p>So we need to tweak the controller click event handler a little bit:</p>
+
+<pre>
+function ( ) {
+    const block = this.nextElementSibling;
+    if ( block.style.maxHeight === "none" ) {
+        block.style.maxHeight = block.scrollHeight + "px" ;
+        window.requestAnimationFrame( function ( ) { 
+            block.style.maxHeight = "0px" ;
+            } ) ; }
+    else block.style.maxHeight = block.scrollHeight + "px";
+    } ) ;
+</pre>
+
+<p>The code above determines whether the block has to be collapsed (block.style.maxHeight === "none") or expanded otherwise. In the first case, we first set the <tt>max-height</tt> property to the current <tt>scroll-height</tt> value + "px", which should be an accepted numerical value for the transition. Then we request an animation frame to execute some code when the next repaint occurs. This makes sure that the scroll height value makes it to the DOM before the callback function code finally resets <tt>max-height</tt> to "0px", which effectively starts the collapse animation.</p>
+
+<p>To verify the concept, expand the block, then make the browser window smaller and watch the "end-of-content" phrase at the bottom:</p>
+
+<figcaption>example-02.htm</figcaption>
+<iframe src="example-02.htm"></iframe>
+
+<p>The block height now grows as required. You may have to scroll down to keep the "end-of-content" visible.</p>
+
+<!-- Core Idea --></div>
+
+<h2 cbc>Control Icons</h2><div>
+
+<p>A control icon in the collapsible block controller element, in front of the text, is useful to indicate the block state. We will use two background images, circled plus, and minus. For this purpose, some CSS code lines have to be added:</p>
+
+<pre>
+[cbc] {
+	background-image : url(orange-plus-3.svg) ;
+	background-repeat : no-repeat ;
+	background-size : contain ;
+	background-position : left ;
+	padding-left : 1.5em ;
+	}
+
+[cbc][expand] {
+	background-image : url(orange-minus-3.svg) ;
+	}
+</pre>
+
+<p>The <tt>[cbc]</tt> rule defines the icon and its position and size in the block controller element. Some padding ensures that there is enough space between icon and text.</p>
+
+<p>To show the circled minus icon to idicate an expanded block, the CSS code used an <tt>expand</tt> attribute on the controller. It must be set by the click event script:</p>
+
+<pre>
+controller.addEventListener( "click", function ( ) {
+    <hi>const expanding = this.toggleAttribute( "expand" );</hi>
+    const block = this.nextElementSibling;
+    if ( expanding ) block.style.maxHeight = block.scrollHeight + "px";
+    else {
+        block.style.maxHeight = block.scrollHeight + "px" ;
+        window.requestAnimationFrame( function ( ) { 
+            block.style.maxHeight = "0px" ;
+            } ) ; } } ) ;
+</pre>
+
+<p>Try it out here:</p>
+
+<figcaption>example-03.htm</figcaption>
+<iframe src="example-03.htm"></iframe>
+
+<!-- Control Icons --></div>
+
+<h2 cbc>Icon Size Adjustment</h2><div>
+
+<p>The icons are resized by a CSS attribute to fit the container size:</p>
+
+<pre>background-size : contain;</pre>
+
+<p>Without further ado, the icon size matches the font size perfectly.</p>
+
+<p>To resize the icons relative to the text size or line height, we could use an em-length:</p>
+
+<pre>background-size : 0.8em ;</pre>
+
+<p>With a proper scaling factor, the icon can be made smaller and larger to some extent.</p>
+
+<p>Another way to scale the circle size relative to the line height is to add some padding around the circle in the svg drawing. More padding shrinks the circle in relation to the line height, because the entire image, including the padding, must fit into the container.</p>
+
+<p>The following example uses a number of heading elements to demonstrate that:</p>
+
+<figcaption>example-04.htm</figcaption>
+<iframe src="example-04.htm"></iframe>
+
+<p>There are some design issues here. Firstly, if icons with padding are used, the circles are not perfectly aligned to their left side. Secondly, the icons might get too small.</p>
+
+<p>The second flaw is not much of an issue, because if the icon is too small, the line height (and thus the font size) will be too small anyway. Enlarging the font size sufficiently will make the problem disappear.</p> 
+
+<p>The first flaw can be addressed with using icon images without padding. Then the icon size can be scaled up or down in relation to the font size with an em-length unit, like so: <tt>background-size = 0.8em;</tt>.</p>
+
+<figcaption>example-05.htm</figcaption>
+<iframe src="example-05.htm"></iframe>
+
+<p>While this works ok of far, you might want to have more control over icon and text alignment. That is covered in the next section.</p>
+
+<!-- Control Icon Size Adjustment --></div>
+
+<h2 cbc>Control Icon Alignment</h2><div>
+
+<p>Depending on your needs, you might want to alin the icons to the left, their center or right side. Similarly, you might want to have the controller element text to be verically aligned. Currently, there is a <tt>padding-left</tt> of 1.2em on the controller element, which scales nicely with the line height, so the distance to the icons is more or less consistent.</p>
+
+<p>To get the icon centers vertially aligned, one might be tempted to fiddle with the <tt>background-position</tt> value &mdash; but that's not so easy: The icon size is a function of the font size... So we need a dedicated icon container, for example a <tt>span</tt> element that is generated by the init script:</p>
+
+<pre>
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i &lt; controllers.length; i++ ) {
+	const controller = controllers[ i ];
+	<hi>controller.insertBefore( document.createElement( "span" ), controller.firstChild ).innerHTML = "&amp;nbsp;" ;</hi>
+	controller.addEventListener( "click", function ( ) {
+		this.toggleAttribute( "expand" );
+		const block = this.nextElementSibling;
+		block.style.maxHeight = block.style.maxHeight ? "" : block.scrollHeight + "px";
+		} ) }
+</pre>
+
+<p>It is essential to fill the <tt>span</tt> element with a non-breaking space so that we get a useful line height, otherwise the icon would be scaled down to zero with its container.</p>
+
+<p>The CSS code has to be adjusted accordingly. Now the <tt>span</tt> element holds the control icon:</p>
+
+<pre>
+[cbc]+* {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.6s ease-out;
+	background-color : #E0E0E0;
+	}
+
+[cbc]>span {
+	display : inline-block ;
+	<hi>width : 20px ;</hi>
+	line-height : 100% ;
+	background-image : url(orange-plus-0.svg) ;
+	background-repeat : no-repeat ;
+	<hi>background-size : contain ;</hi>
+	<hi>background-position : center ;</hi>
+	margin-right : 10px ;
+	}
+	
+[cbc][expand]>span {
+	background-image : url(orange-minus-0.svg) ;
+	}
+</pre>
+
+<p>Now the <tt>span</tt> element holds the control icon. The <tt>background-position</tt> can be set to <tt>right</tt>, <tt>center</tt> or <tt>left</tt>, whatever suits best.</p>
+
+<p>The icon container element is rendered as inline-block with a fixed <tt>width</tt> of 20 pixels. This might be too small, it effectively limits the icon size to a maximum of 20 by 20 pixels. But it just might be what you want...</p>
+
+<p>You can also fiddle with the background-size property to scale the control icons, as demonstrated above.</p>
+
+<p>Here we have an example with centered control icons and left-aligned text:</p>
+
+<figcaption>example-06.htm</figcaption>
+<iframe src="example-06.htm"></iframe>
+
+<!-- Vertical Icon Alignment --></div>
+
+<h2 cbc>Initially Expanded Blocks</h2><div>
+
+<p>As defined in the CSS code, all collapsible blocks start out collapsed. In example 3, we switched block state control from the block's <tt>max-height</tt> property to the controller element's <tt>expand</tt> attribute. If we now add the attribute <tt>expand</tt> to a controller element in the HTML source code, we might expect that the associated block appears expanded after loading. But this is not the case.</p>
+
+<p>We could add a CSS rule to handle initially expanded blocks, like so&hellip;</p>
+
+<pre>
+[cbc][expand]+* {
+    max-height : none ;
+    }
+</pre>
+
+<p>^hellip; but this ruins the first expanding transitions:</p>
+
+<figcaption>example-07.htm</figcaption>
+<iframe src="example-07.htm"></iframe>
+
+<p>So we must go for something different. How about testing the <tt>expand</tt> attribute in the init script?</p>
+
+<pre>
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i < controllers.length; i++ ) {
+	const controller = controllers[ i ];
+	controller.insertBefore( document.createElement( "span" ), controller.firstChild ).innerHTML = "&nbsp;" ;
+	<hi>if ( controller.hasAttribute( "expand" )) controller.nextElementSibling.style.maxHeight = "none" ;</hi>
+	controller.addEventListener( "click", function ( ) {
+		// Click event handler
+		const expanding = this.toggleAttribute( "expand" );
+		const block = this.nextElementSibling;
+		if ( expanding ) block.style.maxHeight = block.scrollHeight + "px";
+		else {
+			block.style.maxHeight = block.scrollHeight + "px" ;
+			window.requestAnimationFrame( function ( ) { 
+				block.style.maxHeight = "0px" ;
+				} ) ; } } ) ;
+	controller.nextElementSibling.addEventListener( "transitionend", function ( ) { 
+		// Remove max height limitation if block was expanded
+		if ( this.style.maxHeight !== "0px" ) this.style.maxHeight = "none" ;
+		} ) ; }
+</pre>
+
+<p>That works!</p>
+
+<figcaption>example-08.htm</figcaption>
+<iframe src="example-08.htm"></iframe>
+
+<!-- Initially Expanded Blocks --></div>
+
+<h2 cbc>Expand &amp; Collapse All</h2><div>
+
+<p>Collapsed blocks have a potentially serious flaw: They defeat the browser's text search function! Although the search function <em>does</em> find and highlights matching text inside collapsed blocks, but because they are collapsed, you won't see anything. So, we need a way to expand all the collapsed blocks before we use the browser text search: The Expand Collapsed Blocks function:</p>
+
+<pre>
+function expandBlocks ( ) {
+	const controllers = document.querySelectorAll( "[cbc]:not([expand])" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		clickEventHandler.call( controllers[ i ] );
+		} }
+</pre>
+
+<p>The code collects all the controllers that don't have an <tt>expand</tt> attribute, and applies the click event handler on them, with the this parameter bound to the current controller. To make that work, we need to pull the handler out of the document init code:</p>
+
+<pre>
+function clickEventHandler ( ) {
+	const expanding = this.toggleAttribute( "expand" );
+	const block = this.nextElementSibling;
+	if ( expanding ) block.style.maxHeight = block.scrollHeight + "px";
+	else {
+		block.style.maxHeight = block.scrollHeight + "px" ;
+		window.requestAnimationFrame( function ( ) { 
+			block.style.maxHeight = "0px" ;
+			} ) ; } } 
+</pre>
+
+<p>This also simplifies the init code:</p>
+
+<pre>
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i &lt; controllers.length; i++ ) {
+	const controller = controllers[ i ];
+	controller.insertBefore( document.createElement( "span" ), controller.firstChild ).innerHTML = "&nbsp;" ;
+	if ( controller.hasAttribute( "expand" )) controller.nextElementSibling.style.maxHeight = "none" ;
+	controller.addEventListener( "click", clickEventHandler );
+	controller.nextElementSibling.addEventListener( "transitionend", function ( ) { 
+		// Remove max height limitation if block was expanded
+		if ( this.style.maxHeight !== "0px" ) this.style.maxHeight = "none" ;
+		} ) ; }
+</pre>
+
+<p>If there is an expand all function, then there should also be a collapse all function:</p>
+
+<pre>
+function collapseBlocks ( ) {
+	const controllers = document.querySelectorAll( "[cbc][expand]" );
+	for ( let i = 0; i < controllers.length; i++ ) clickEventHandler.call( controllers[ i ] );
+	}
+</pre>
+
+<p>Here is the test document:</p>
+
+<figcaption>example-09.htm</figcaption>
+<iframe src="example-09.htm"></iframe>
+
+<p>Works as expected. The function is useful to quickly navigate to a different portion of a longish document: First Collapse all to get a full overview, then expand individual blocks to drill down to the desired section.</p>
+
+<!-- Expand &amp; Collapse All --></div>
+
+<h2 cbc>Show Collapsed Content</h2><div>
+
+<p>The previously introduced function Collapse or Expand All functions overwrite the <tt>expand</tt> attribute, and thus destroy the user configuration. Sometimes it might be useful to unhide the collapsed content, perform a search function, and then restore the previous document state:</p>
+
+<pre>
+function showContent ( ) {
+	const controllers = document.querySelectorAll( "[cbc]:not([expand])" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		const controller = controllers[ i ];
+		controller.setAttribute( "force-visible", "" );
+		controller.nextElementSibling.style.maxHeight = controller.nextElementSibling.scrollHeight + "px";
+		} }
+</pre>
+
+<p>The function searches for all cbc controller elements which don't have an <tt>expand</tt> attribute, adds a <tt>force-visible</tt> attribute and expands the associated block.</p>
+
+<p>To restore the previous document state, the following function must be called:</p>
+
+<pre>
+function hideContent ( ) {
+	const controllers = document.querySelectorAll( "[cbc][force-visible]" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		const controller = controllers[ i ];
+		controller.removeAttribute( "force-visible" );
+		block = controller.nextElementSibling;
+		block.style.maxHeight = block.scrollHeight + "px" ;
+		window.requestAnimationFrame( function ( ) { 
+			this.style.maxHeight = "0px" ;
+			}.bind( block )) ; } }
+
+</pre>
+
+<p>This function searches for controllers with a <tt>force-visible</tt> attribute, removes that attribute, and collapses the associated block. Similar to the click event handler, this is a two-step procedure, where the first step ensures a numerical <tt>max-height</tt> value, and the second step sets <tt>max-height</tt> to zero in a new animation frame.</p>
+
+<p>Note that the callback function is returned by the <tt>bind</tt> call, which binds the block element reference to the this parameter. If the binding was omitted, only the last block would be expanded, because the <tt>block</tt> variable changes in every loop iteration, before the callback function has a chance to run.</p>
+
+<p>Additionally, the controller click event handler needs to remove a <tt>force-visible</tt> attribute if it is present. This allows to prevent sections of interest to be collapsed in the <tt>hideContent</tt> function:</p>
+
+<pre>
+function clickEventHandler ( ) {
+	if ( this.hasAttribute( "force-visible" )) this.removeAttribute( "force-visible" );
+	const expanding = this.toggleAttribute( "expand" );
+	const block = this.nextElementSibling;
+	if ( expanding ) block.style.maxHeight = block.scrollHeight + "px";
+	else {
+		block.style.maxHeight = block.scrollHeight + "px" ;
+		window.requestAnimationFrame( function ( ) { 
+			block.style.maxHeight = "0px" ;
+			} ) ; } } 
+</pre>
+
+<p>Here you can check the code:</p>
+
+<figcaption>example-10.htm</figcaption>
+<iframe src="example-10.htm"></iframe>
+
+<ol>
+<li>Click "Show Collapsed Content". All hidden content becomes visible, but the <tt>plus</tt> icons remain unchanged. This is an indicator that the collapsible blocks are forced to expand, but the controller remains in the collapsed state.</li>
+<li>Click "Hide Collapsed Content". All content is hidden again, the document is in the initial state agan.</li>
+<li>Click on a <tt>plus</tt> icon to expand a block.</li>
+<li>Click "Show Collapsed Content". Note that all icons show <tt>plus</tt>, except one. This block is in the normal expanded state, the others are forced expanded.</li>
+<li>Click "Hide Collapsed Content". All blocks collapse except the one which was already expanded before in step 3.</li>
+<li>Click "Show Collapsed Content", then</li>
+<li>click on a <tt>plus</tt> icon. The controller icon changes to <tt>minus</tt>, and the block remains expanded. This indicates that the <tt>forced-visible</tt> status has been removed and the block is now in the normal expanded state.</li>
+<li>Click "Hide Collapsed Content". Not that block from step 7 remains expanded.</li>
+</ol>
+
+<!-- Show Collapsed Content -->
+
+<h2 cbc>Scroll Element into View</h2><div>
+
+<p>An URL with a hash like "example-11.htm#target-3" loads the document and scrolls the element with the id "target-3" into view. Unfortunatley, if the target element is in a collapsed block, this will not work as expected. The collapsed block, and all other collapsed parent blocks must be expanded before the element can be scrolled into view.</p>
+
+<p>Unfortunately there is another complication: If the document is loaded and you click on an anchor that links to a target on that page, the document will not be reloaded. Instead, the link target element is scrolled into view.</p>
+
+<figcaption>example-11.htm</figcaption>
+<iframe src="example-11.htm"></iframe>
+
+<p>To check that out, &hellip;</p>
+<ol>
+<li>Click on one of the links at the bottom. This will add a suitable hash to the URL.</li>
+<li>Click the "Expand Path" button.</li>
+</ol>
+
+<p>The block should open and reveal the target element.</p>
+
+<!-- Scroll Element into View --></div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

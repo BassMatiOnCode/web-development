@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm"version="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-05" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-05" />
+<meta name="version" content="1" />
+<meta name="categories" content="Programming > Web Design > Toolbox" />
+<meta name="tags" content="web, design, toolbox, toolbar component" />
+<meta name="description" content="The toolbar component creates the HTML code for the toolbar, then adds various buttons that fit the content." />
+<title>Web Design Toolbox - Toolbar Component</title>
+
+<link rel="stylesheet" href="/inc/page.css" />
+ 
+</head><body><div id="page-header"></div><div id="main-toolbar"><div id="content">
+
+<h1>The Toolbar Component</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Container Element</h2><div>
+
+<p>The toolbar is a <tt>DIV</tt>element that sits between the page header and the page content containers:</p>
+
+<figcaption>Listing 1: Toobar container between header and content elements</figcaption><pre>
+&lt;div id="page-header"&gt;&hellip;&lt;/div&gt;
+&lt;div class="<hi>toolbar</hi>" id="main-menu"&gt;&hellip;&lt;/div&gt;
+&lt;div id="page-content"&gt;&hellip;&lt;/div&gt;
+</pre>
+
+<p>Inside are "buttons" of various types:</p>
+
+<figcaption>Listing 2: Tool buttons</figcaption><pre>
+&lt;div class="<hi>toolbar</hi>" id="main-menu"&gt;
+&lt;svg&gt;&hellip;&lt;/svg&gt;
+&lt;a href="some.url"&gt;&lt;svg&gt;&hellip;&lt;/svg&gt;&lt;/a&gt;
+&lt;div name="button-name"&gt;&nbsp;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<p>We have SVG elements with click event handlers attached, anchor elements that link to a diffent URL with an SVG image inside, and DIV elements with an event handler attached and a background image as defined in the associated CSS file.</p>
+
+<!-- The Container Element --></div>
+
+<h2 cbc>CSS Code</h2><div>
+
+<p>Listing 3 shows the toobar container element style:</p>
+
+<figcaption>Listing 3: Toolbar container style</figcaption><pre>
+.toolbar {
+	display : block ;
+	position : sticky;
+	top : 0px ;
+	right : 0px ;
+	margin-left : -40px ;
+	padding-left : 40px ;
+	margin-right : -20px ;
+	padding-top : 5px ;
+	height : auto ;
+	border-bottom : 1px solid silver;
+	border-top : 1px solid darkorange;
+	background-color : white ;
+	}
+</pre>
+
+<p>The toolbar is a sticky block container, which means that the toolbar scrolls up with the page content, but never disappears &ndash; it sticks at a defined position at the top of the window.</p>
+
+<p>A button has the following style, a certain size, border, et cetera, and is prepared for a background image:</p>
+
+<figcaption>Listing 4: Toolbar container styles</figcaption><pre>
+.toolbutton {
+	display : inline-block ;
+	<cc>/* Make sure width and height matches attributes in toolbar.js:createSVG, minus 1! */</cc>
+	width : 32px ;
+	height : 32px ;
+	margin-right : 15px ;
+	border : 1px solid transparent;
+	border-radius : 8px;
+	background-repeat : no-repeat ;
+	background-position : center, center ;
+	}
+
+.toolbutton:hover {
+	border-color : gray ;
+	}
+</pre>
+
+<p class="note">NOTE<br/>The button size defined in the CSS must match the SVG image size, as defined in the associated JavaScript. Look for the comments in the source codes!</p>
+
+<p>The toolbuttons have a specific size. Their border is animated with the <tt>:hover</tt> pseudo selector.</p>
+
+<p>Inlined SVG images have no internal styles, they are all styled in a central location with the following instructions:</p>
+
+<figcaption>Listing 5: Toolbar container styles</figcaption><pre>
+.toolbar svg  { 
+	fill : white; 
+	stroke : #f59d56; 
+	stroke : darkorange;
+	stroke-linecap : round; 
+	stroke-linejoin : round; 
+	stroke-width : 8px; 
+	}
+</pre>
+
+<p>Their fill color is white, the stroke (pen) color is dark orange, the stroke width is 8 pixels. Of course, the styles can be overridden in the SVG source code if required.</p>
+
+<p>A little highlight (from my level of knowledge) is the following code:</p>
+
+<figcaption>Listing 6: Toolbar container styles</figcaption><pre>
+.toolbar svg .expand {
+	stroke : transparent ;
+	}
+
+.toolbar svg[expand] .expand {
+	stroke : darkorange;
+	}
+</pre>
+
+<p>If an SVG drawing element has the class name "expand", it can be made visible (by setting the stroke color to dark orange) by setting the SVG button element attribute "expand" to "true" (or ""). If that attribute is missing (or "false"), the drawing element is transparent, i. e. invisible. This is applied to the circled plus icon that expands or collapses all collapsible blocks in the content container. If the blocks are to be expanded, the vertical line is orange. If they are to be collapsed, the vertical line is transparent.</p>
+
+<!-- CSS Code --></div>
+
+<h2 cbc>Script Code</h2><div>
+
+<p>Listing 7 shows the toobar script code. The page init code creates the toolbar DIV element and inserts it as first child of the BODY.</p>
+
+<figcaption>Listing 7:</figcaption><pre>
+let toolbar ;
+
+export function initPage ( ) {
+	<cc>/// Creates the main toolbar.</cc>
+	toolbar = document.createElement( "DIV" );
+	toolbar.className = "toolbar" ;
+	toolbar.id = "main-menu" ;
+	document.body.insertBefore( toolbar, document.body.firstChild );
+	}
+</pre>
+
+<p>The buttons are created later, after the document fragments have been loaded:</p>
+
+<figcaption>Listing 8: Creating the buttons</figcaption><pre>
+export function createButtons( navigation, collapsible ) {
+	<cc>/// Creates the toolbar buttons.
+	/// Parameters provide the necessary methods that are used by the buttons.</cc>
+	let button;
+	createButton( "svg", "navigate", "svg", steeringWheel, navigation.navigateButtonClickHandler ); 
+	createButton( "a", "navigate-up", "svg", upArrow, navigation.parent );
+	createButton( "a", "navigate-first", "svg", leftEndArrow, navigation.first );
+	createButton( "a", "navigate-previous", "svg", leftArrow, navigation.previous );
+	createButton( "a", "navigate-next", "svg", rightArrow, navigation.next );
+	createButton( "a", "navigate-last", "svg", rightEndArrow, navigation.last );
+	if ( document.querySelector( "body > #content > [cbc]" )) {
+		button = createButton( "svg", "collapse-toggle", "svg", circledPlusMinus, collapsible.toggleAllBlocks );
+		button.setAttribute( "expand", "" );
+		}
+	}
+</pre>
+
+<p>The last button is only created if there are collapsible blocks in the content container.</p>
+
+<p>The actual button creation is handed over to <tt>createButton</tt> function:</p>
+
+<figcaption>Listing 9: Creating the buttons, part 2</figcaption><pre>
+function createButton( tag, name, imgtype, imgurl, option ) {
+	<cc>/// Creates a button in the toolbar.
+	/// tag : Element tag name, A, DIV or SVG
+	/// name : Element Name attribute as required by toolbar.css
+	/// imgtype : String, svg or url
+	/// imgurl : Image URL (string) or svg object reference
+	/// option : URL for A or event handler reference for other elements</cc>
+	let button;
+	tag = tag.toUpperCase( );
+	<cc>// Create the button element</cc>
+	button = tag === "SVG" ? createSVG( imgurl ) : document.createElement( tag );
+	button.setAttribute( "class", "toolbutton" );
+	button.setAttribute( "name", name ) ;
+	<cc>// A buttons have an href element, the others have an event handler attached.</cc>
+	if ( tag === "A" ) button.setAttribute( "href", option );
+	else button.addEventListener( "click", option );
+	<cc>// SVG buttons have no image, they are the image.</cc>
+	switch ( tag ) {
+	case "A" :
+	case "DIV" : 
+		switch ( imgtype ) {
+		case "url" : button.appendChild( createImage( imgurl )); break;
+		case "svg" : button.appendChild( createSVG( imgurl )); break;
+		case "obj" : button.appendChild( imgurl ); break;
+		} }
+	toolbar.insertBefore( button, null );
+	return button;
+</pre>
+
+<p>The method can create three kinds of buttons:</p>
+
+<ul>
+<li>A buttons that links to a URL, with an image child element</li>
+<li>DIV buttons, with an event handler attached image child element</li>
+<li>SVG buttons with an event handler attached</li>
+<li>Other image elements with an event handler attached</li>
+</ul>
+
+<figcaption>Listing 10: Creating the buttons, part 3</figcaption><pre>
+function createImage( url ) {
+	const image = document.createElement( "IMG" );
+	image.setAttribute( "src", url );
+	return image;
+	}
+</pre>
+
+<p>The following function creates SVG image elements. The function takes an string with SVG drawing instructions and embeds them in the body of a standard SVG button element. </p>
+
+<figcaption>Listing 11: Creating the buttons, part 4</figcaption><pre>
+function createSVG( content ) {
+	const e = document.createElementNS( "http://www.w3.org/2000/svg", "svg" );
+	e.setAttribute( "xmlns:xlink", "http://www.w3.org/1999/xlink" );
+	e.setAttribute( "viewBox", "-50 -50 100 100" );
+	<cc>// Make sure width and height matches attributes in toolbar.css .toolbutton, plus 1!</cc>
+	e.setAttribute( "width", "33" );
+	e.setAttribute( "height", "33" );
+	e.setAttribute( "version", "1.1" );
+	e.setAttribute( "class", "svg-toole" );
+	e.innerHTML = content ;
+	return e ;
+	}
+</pre>
+
+<p>Note that width and height must match the CSS definition size of a toolbutton!</p>
+
+<p>The SVG buttons are defined by drawing instructions, stored as strings. They are intended to be wrapped with an SVG container element.</p>
+
+<figcaption>Listing 12: Creating the buttons, part 5</figcaption><pre>
+const steeringWheel = "<g stroke-width='7'><ellipse cx='0' cy='0' rx='37' ry='37'' /><ellipse cx='0' cy='0' rx='12' ry='12' /><path d='M 0, -46 L 0, 46 M -46, 0 L 46, 0 M -32.53, -32.53 L 32.53, 32.53 M 32.53, -32.53 L -32.53, 32.53' />" ;
+const upArrow = "<path d='M 0, -35 L 0, 35 M -35, 0 L 0, -35 L 35, 0' />" ;
+const leftEndArrow = "<path d='M -35, 0 L 35, 0 M -35, 40 L -35, -40 M 10, 35 L -28, 0 L 10, -35' />" ;
+const leftArrow =  "<path d='M -35, 0 L 35, 0 M 0, 35 L -35, 0 L 0, -35' />" ;
+const rightArrow = "<path d='M -35, 0 L 35, 0 M 0, 35 L 35, 0 L 0, -35' />" ;
+const rightEndArrow = "<path d='M -35, 0 L 35, 0 M 35, -40 L 35, 40 M -10, 35 L 28, 0 L -10, -35' />" ;
+const circledPlusMinus = "<ellipse cx='0' cy='0' rx='45' ry='45' /><path d='M -25, 0 L 25, 0' /><path class='expand' d='M 0, -25 L 0, 25' />" ;
+</pre>
+
+<p>Note the classname "expand" on a path element of the circledPlusMinus definition. This attribute is used to modify the stroke color of the vertical bar.</p>
+
+<!-- Script Code --></div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

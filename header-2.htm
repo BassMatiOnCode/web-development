@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" change-date="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-04" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-16" />
+<meta name="version" content="1" />
+<meta name="categories" content="Programming > Web Design > Toolbox" />
+<meta name="tags" content="web, design, toolbox, header, component" />
+<meta name="description" content="The header component creates a container for a page header, and integrates it into the web page. Usually a header contains some graphics or photo, and the web page title." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+
+<title>Web Design Toolbox - Header Component</title>
+
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>Header Component</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>HTML Code</h2><div>
+
+<p>In the current implementation, the DIV element hosts a single SVG element, a scalable vector graphics with some lines and positioned text:</p>
+
+<figcaption>Listing 1: The HTML code for the header component</figcaption><pre>
+&lt;div class="page-header"&gt;
+&lt;svg viewBox="5 0 142 50" width="213" height="75" version="1.1" 
+    xmlns="http://www.w3.org/2000/svg"&gt;
+&lt;text x="13" y="43" class="clef"&gt;?&lt;/text&gt;
+&lt;line x1="10" y1="10" x2="40" y2="10"&gt;&lt;/line&gt;
+&lt;line x1="10" y1="18" x2="40" y2="18"&gt;&lt;/line&gt;
+&lt;line x1="10" y1="26" x2="142" y2="26"&gt;&lt;/line&gt;
+&lt;line x1="10" y1="34" x2="40" y2="34"&gt;&lt;/line&gt;
+&lt;line x1="10" y1="42" x2="40" y2="42"&gt;&lt;/line&gt;
+&lt;text x="140" y="24" class="logotext logotext-1"&gt;Bassmati&lt;/text&gt;
+&lt;text x="140" y="38" class="logotext logotext-2"&gt;on Code&lt;/text&gt;
+&lt;/svg&gt;&lt;/div&gt;
+</pre>
+
+<p>The advantage of using SVG is the ability to combine graphical elements with exactly positioned text. You can use a vector graphics editor such as Inkscape or Visio to get yourself started. When done, if you like, you can delete the junk added by the editors for their internal purposes, like I did. What's left is the essence, pure, unbloated SVG code. This can be edited and further tweaked with a simple text editor.</p>
+
+<p>The reason why I included the SVG source code in this HTML document and not as an external linked file is that the first text element, a question mark, has to use a special font (notes.ttf), which is then rendered as bass clef. If an external SVG image is linked into the HTML document with an IMG or OBJECT tag or referenced from CSS as background image, the SVG image cannot reference external resources. They must be self-contained for privacy reasons. In other words, a CSS font declaration from an SVG file to an external font (notes.ttf) has no effect.</p>
+
+<p>This limitation does not exist if the SVG is inlined into the HTML code. Now we can even style the entire thing with CSS.</p>
+
+<!-- HTML Code --></div>
+
+<h2 cbc>CSS Code</h2><div>
+
+<p>The CSS code begins the the font declaration:</p>
+
+<figcaption>Listing 2: Font declaration in header.css</figcaption><pre>
+@font-face { 
+	font-family: Notes; 
+	src: 	local("Notes"), 
+		url(/inc/fnt/notes.ttf) format("truetype");
+	}
+</pre>
+
+<p>This declaration is required for the bass clef symbol in the logo. Then we have some general appearance styles:</p>
+
+<figcaption>Listing 3: Colors and positions</figcaption><pre>
+div.page-header {
+	margin-left : -40px ;
+	margin-right : -20px ;
+	height : 80px ;
+	background-color : #204080;
+	}
+
+div.page-header > svg { 
+	margin-left: 30px;
+	}
+</pre>
+
+<p>The first two rules define things like background color, height, and position. The left and right margins compensate the BODY's right and left margin settings by the exact same amount, but negative. The effect is that the header now spans the entire width of the window.</p>
+
+<p>Listing 4 shows the styles for the individual SVG elements. Essentially, stroke and fill colors, and font families. The background color is inherited from the parent, the DIV element.</p>
+
+<figcaption>Listing 4: SVG element styles</figcaption><pre>
+div.page-header svg { fill: #FFFFFF; }
+div.page-header svg line { stroke: #FFFFFF; stroke-width: 0.8px; }
+div.page-header svg .logotext { text-anchor: end; }
+div.page-header svg .logotext-1 { font-family: "georgia"; font-size: 21px; }
+div.page-header svg .logotext-2 { font-family: "Bookman Old Style"; font-size: 12px; font-style: italic; }
+div.page-header svg .clef { font-family: "Notes"; font-size: 34px; }
+</pre>
+
+<!-- CSS Code --></div>
+
+<h2 cbc>Alternative Header Implementation</h2><div>
+
+<p>If you can't provide the logo image as SVG image (for example it is a JPEG photo), you can do the following:</p>
+
+<figcaption>Listing 5: Alternative header content</figcaption><pre>
+&lt;div class="page-header"&gt;Bassmati&lt;br/&gt;on Code&lt;/div&gt;
+</pre>
+
+<p>The text is now defined in HTML in the page-header DIV. The image is imported as background image from a png file:</p>
+
+<figcaption>Listing 6: Alternative header styles</figcaption><pre>
+div.page-header {
+	margin-left : -40px ;
+	margin-right : -20px ;
+	height : 80px ;
+	padding-left: 200px ;
+	background-color : #204080;
+	background-image : url( /img/bass-clef.png ) ;
+	background-position : 40px 10px ;
+	background-repeat : no-repeat;
+	}
+
+div.page-header > svg { 
+	margin-left: 30px;
+	}
+</pre>
+
+<p>A suitable left padding aligns the text somewhat behind the logo.</p>
+<p>This approach is more traditional and should be easier for most developers.</p>
+
+<!-- Alternative Header Implementation --></div>
+
+<h2 cbc>Script Code</h2><div>
+
+<p>You might have noticed that there is no such HTML code anywhere in the page template. And yes, the entire HTML is generated in the header component script:</p>
+
+<figcaption>Listing 7: Header page init code</figcaption><pre>
+export function initPage( ) {
+	<cc>/// Creates the page header container with the embedded SVG graphics.</cc>
+	const header = document.createElement( "DIV" );
+	header.className = "page-header" ;
+	<cc>// Create the SVG element. </cc>
+	header.innerHTML = '&lt;svg viewBox="5 0 142 50" width="213" height="75" version="1.1" \
+        xmlns="http://www.w3.org/2000/svg"&gt; \
+	&lt;text x="13" y="43" class="clef"&gt;?&lt;/text&gt; \
+	&lt;line x1="10" y1="10" x2="40" y2="10"/&gt; \
+	&lt;line x1="10" y1="18" x2="40" y2="18"/&gt; \
+	&lt;line x1="10" y1="26" x2="142" y2="26"/&gt; \
+	&lt;line x1="10" y1="34" x2="40" y2="34"/&gt; \
+	&lt;line x1="10" y1="42" x2="40" y2="42"/&gt; \
+	&lt;text x="140" y="24" class="logotext logotext-1"&gt;Bassmati&lt;/text&gt; \
+	&lt;text x="140" y="38" class="logotext logotext-2"&gt;on Code&lt;/text&gt; \
+	&lt;/svg&gt;' ; \
+	document.body.insertBefore( header, document.body.firstChild );
+	}
+</pre>
+
+<p>The code generates a <tt>DIV</tt> element, sets the classname (will change to id some time), and inserts it before the first body child. Which should be the toolbar element. As you see, order does matter: The toolbar must be inserted first, then the header.</p>
+
+<p>The SVG element is inserted as plain text, assigned to the <tt>innerHTML</tt> property. Quick and dirty and works fine.</p>
+
+<!-- Script Code --></div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

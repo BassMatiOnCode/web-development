@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm"version="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-23" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-23" />
+<meta name="version" content="1" />
+<meta name="categories" content="Web Development > Toolbox" />
+<meta name="tags" content="web, development, toolbox, page, template." />
+<meta name="description" content="Page templates are provided so that a new page can be added to a website with minimum effort. On this page you will find information about structure and styling. Use it as a guideline to customize or create your own page templates." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+ 
+<title>Web Design Toolbox - Page Templates</title>
+
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>Page Templates</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Standard Page Template</h2><div>
+
+<p>The standard page template constists of 4 container elements, page header, main toolbar, content container and page footer. The site navigation panel at the left side is initially collapsed to zero width, and the user can expand it as required. The other containers stretch out horizontally to fill the entire horizontal space of the window. If the window size changes, the content flows up or down as required. This works well without changes on desktop monitors, tablets and smart phones.</p>
+
+<figcaption>Figure 4: Collapsed navigation panel</figcaption>
+<object data="./img/fig-004.svg" type="image/svg+xml" width="300"></object>
+
+<p>The panel overlaps the other container elements in the expanded state:</p>
+
+<figcaption>Figure 5: Expanded navigation panel</figcaption>
+<object data="./img/fig-005.svg" type="image/svg+xml" width="300"></object>
+
+<h3 cbc>HTML Structure</h3><div>
+
+<p>Listing 1 outlines the related HTML page template. You should be able to easily identify the container elements described above:</p>
+
+<figcaption class="listing">Simplified container structure of a standard page</figcaption>
+<pre>
+&lt;html&gt;
+&lt;head&gt;
+    &hellip;
+&lt;link rel="<hi>stylesheet</hi>" href="<hi>/inc/page.css</hi>" /&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;div id="page-header"&gt;&lt;/div&gt;
+&lt;div id="main-toolbar"&gt;&lt;/div&gt;
+&lt;div id="<hi>content</hi>"&gt;<cc>Your content goes here</cc>&lt;/div&gt;
+&lt;div id="page-footer"&gt;&hellip;&lt;/div&gt;
+&lt;div id="navigation-panel"&gt;&hellip;&lt;/div&gt;
+&lt;<hi>script</hi> type="module" src="<hi>/inc/page.js</hi>"&gt;&lt;/<hi>script</hi>&gt;&lt;/body&gt;&lt;/html&gt;
+</pre>
+
+<p>The HEAD element contains document metadata and links to the <tt>page.css</tt> stylesheet, which contains instructions how to style the various HTML elements in the document.</p>
+
+<p>The BODY element holds the five container elements mentioned above, namely the <tt>page-header</tt>, <tt>main-toolbar</tt>, <tt>content</tt> container, <tt>page-footer</tt> and the <tt>navigation-panel</tt>. At the very bottom, right in front of the BODY end tag, the <tt>page.js</tt> script is included. This script defines the document behaviour.</p>
+
+<p>Your content goes into the <tt>content</tt> DIV container. There should already be an H1 element for the page heading, and a paragraph element (P) of class <tt>abstract</tt>, which will be filled with a copy of the content of the <tt>description</tt> META element in the HEAD section.</p>
+
+<p>Note that you won't find the page footer and navigation panel in the template file, these elements are generated and filled with content in the page script. Similarly, the page header and toolbar containers are empty. They are included in the template to avoid visual flicker and the preventing the content container from changing position at load-time.  The page script will fill the container elements with content.</p>
+
+<!-- HTML Structure --></div>
+
+<h3 cbc>Page Styling &ndash; The CSS Code</h3><div>
+
+<p>The page template file links to the page stylesheet in the HEAD element:</p>
+
+<figcaption class="listing"> Linking to the page stylesheet</figcaption><pre>
+&lt;head&gt;
+&lt;link rel="stylesheet" href="<hi>/inc/page.css</hi>" /&gt;
+&hellip;
+&lt;/head&gt;
+</pre>
+
+<p>This file defines the visual representation of a page.</p>
+
+<p class="note">NOTE<br/>If you have some special styles for only a few pages, don't add them to <tt>page.css</tt>. Instead, add local STYLE element to the document and create a new or override an existing style rule. Or better yet, create a .css file to define these special styles, then add an additional <tt>LINK</tt> element in the relevant HTML file(s). You can have multiple stylesheet files linked to a single document.</p>
+
+<p>Now let's have a look into the page stylesheet.</p>
+
+<figcaption class="listing"> The default page styles</figcaption><pre>
+@import url("./colors.css");
+@import url("header-2.css");
+@import url("footer-2.css");
+@import url("toolbar/toolbar-2.css");
+@import url("./collapsible/collapsible-5.css");
+@import url("./navigation/navigation-3.css");
+</pre>
+
+<p>At the very top, a number of other stylesheets are imported. Most color definitions are located in colors.css, so you have a single location to tweak all colors of the entire site. If you are looking for website "skins", this is the place (= file) to look for. Just exchange colors.css with a different version.</p>
+
+<p>Then you will certainly recognize the header, footer, toolbar, and navigation component stylesheets. And there are styles for collapsible content. </p>
+
+<p>The next section imports some web fonts into the document. This is only required for fonts that are not standard operating system fonts on all target machines:</p>
+
+<figcaption class="listing"> Font declarations</figcaption><pre>
+@font-face { 
+	font-family: arial narrow; 
+	font-style: normal; 
+	font-weight: 400;
+	src: 	local("Arial Narrow"), 
+		local("ArialNarrow-Regular"), 
+		url(/fnt/arial-narrow.woff) format("woff"), 
+		url(/fnt/arial-narrow.ttf) format("truetype");
+	}
+</pre>
+
+<p>I used Arial Narrow for headings and the Note font for the bass clef symbol in the SVG in the header panel. If no suitable fonts are on the target machine and if they are not supplied via <tt>font-face</tt> declaration, the browser on the client machine will try to find a suitable replacement. Usually this gives satisfying results. If not, use a font-face declaration.</p>
+
+<p class="note">NOTE<br/>The declared fonts must be available under the specified URL. You can use other servers, Google, or a CDN. In the examples above I have placed them on my own server in the <tt>/fnt/</tt> folder.</p>
+
+<p>The next instruction suppresses the toolbar on print media. The reason is that the toolbar would otherwise appear at the top of every page, which is usually not desired:</p>
+
+<figcaption class="listing"> Toolbar suppression on print media</figcaption><pre>
+@media print {
+	#toolbar { display : none !important ; }
+	}
+</pre>
+
+<p>The following section defines styles for various type of boxes:</p>
+
+<figcaption class="listing"> Simple styles for boxes</figcaption><pre>
+.box { border : 1px solid silver ; }
+.hscroll { overflow-x : auto; }
+.indent { margin-left : 20px ; }
+.no-borders { border-style : none ; }
+.imgbox {
+	border : 1px solid silver;
+	width : 100% ;
+	overflow : auto ;
+	}
+.note {
+	border-left: 5px dotted orange ;
+	margin-left: 20px;
+	padding-left: 10px ;
+	margin-right: 40px ;
+	margin-top: 40px;
+	margin-bottom: 40px;
+	font-family: "Arial Narrow";
+	}
+</pre>
+
+<p>The <tt>.note</tt> class style should already be familiar: It defines the text note box style with the dotted left border.</p>
+
+<p>The next rules define the standard text font. It is inherited from the <tt>body</tt> to all child elements. The <tt>figcaption</tt> has a different font, smaller, more dense, and not so dark. Suits for image and listing captions.</p>
+
+<figcaption class="listing"> Base text font definition</figcaption><pre>
+body {
+	font-family : "Segoe UI", Calibri, Verdana, Arial, "Palatino Linotype", Hevetica ;
+	margin : 0px 20px 40px 40px ;
+	line-height : 180% ;
+	font-size : 14px ;
+	padding-bottom : 60px ;
+	}
+	
+figcaption {
+	font-family : "Times New Roman";
+	font-style : italic ;
+	color: #A0A0A0 ;
+	margin-bottom : 5px;
+	margin-left : 10px ;
+	margin-top : 15px ;
+	margin-bottom : 0px ;
+	}
+</pre>
+
+<p>The next section defines styles for headings of varying degree:</p>
+
+<figcaption class="listing"> Heading styles</figcaption><pre>
+h1, h2, h3, h4, h5, h6 { 
+	font-family : "Arial Narrow", "Times New Roman", "Sans-Serif";
+	line-height : 32px; 
+	font-weight : normal ;
+	margin-top : 40px;
+	margin-bottom : 10px;
+	}
+
+h1+h2, h2+h3, h3+h4, h4+h5 {
+	margin-top: 10px;
+	}
+
+h1 { font-size: 1.7em ; }
+h1.page-subtitle { font-size : 1.3em ; }
+h2 {	font-size : 1.5em ; }
+h3 { font-size : 1.3em ; }
+h4 {	font-size : 1.2em ; }
+h5 { 
+	font-size: 1.0em ;
+	font-style : italic ;
+	margin-bottom : 10px ;
+	}
+</pre>
+
+<figcaption class="listing"> Preformatted text</figcaption><pre>
+pre { 
+	font-family: "Times New Roman", "Palatino Linotype", Serif, Consolas;
+	line-height: 160% ;
+	margin-left : 0px ; 
+	border-top : 1px solid silver ;
+	padding : 10px 10px 11px 10px ;
+	overflow: auto ;
+	}
+</pre>
+
+<p>Listing 11 shows the table styles:</p>
+
+<figcaption class="listing"> Table styles</figcaption><pre>
+table.flat-borders {
+	border-collapse: collapse;
+	}
+
+table.flat-borders td, th {
+	border : solid 1px silver;
+	padding-left: 5px;
+	padding-right: 5px;
+	}
+	
+table.no-borders td, th {
+	border-style : none ;
+	}
+
+tr.column-headers {
+	font-style : italic ;
+	line-height : 15px ;
+	}
+
+tr.column-headers td, th {
+	padding-right : 10px ;
+	}
+</pre>
+
+<p>I have not included every detail here. Have a look into the source file for more information.</p>
+
+<!-- CSS Code --></div>
+
+<h3 cbc>Skins</h3><div>
+
+<p>To create a "skin", create a copy of <tt>colors.css</tt> under a different name and customize the colors to your liking. Then point the color CSS import in <tt>page.css</tt> to that new file.</p>
+
+<p class="note">NOTE<br/>Currently there is no support for changing the skin on the client side. But it should not be difficult to create such a component.</p>
+
+<!-- Skins --></div>
+
+<!-- Standard Page Template --></div>
+
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

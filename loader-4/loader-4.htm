@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" content="empty.htm 2021-08-23 usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-07-02" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-19" />
+<meta name="version" content="2" />
+<meta name="categories" content="" />
+<meta name="tags" content="programming, JavaScript, components, fetch, promise, loader, nested, recursive" />
+<meta name="description" content="The recursive fragment loader component addresses the fact that there is no real HTML feature that allows to compose a web page from HTML fragment or snippet files. Although there is a TEMPLATE element that can hold a DocumentFragment, but that's an entirely different mechanism. The TEMPLATE element cannot reference external resources. As a consequence, some scripting is required." />
+
+<title>Web Design Toolbox - Recursive Fragment Loader</title>
+
+<link rel="stylesheet" href="/inc/page.css" />
+ 
+</head><body><div id="page-header"></div><div id="main-toolbar"><div id="content">
+
+<h1>Recursive Fragment Loader</h1>
+
+<p id="page-abstract"></p>
+
+<p>Version 4 of the loader implements a recursive loading algorithm, based on the JavaScript fetch API, encapsulated in an ES6 module.</p>
+
+<p>There are numerous applications for a recursive loader component. For example,</p>
+
+<ul>
+<li>Fragmented table-of-contents for a web site</li>
+<li>Instruction list fragments</li>
+<li>Repeated warnings or hints</li>
+</ul>
+
+<p>A table-of-contents for a web site, a product catalog or a book is typically a nested list of links to parts, sections and pages. Even small web sites may want to have a single ToC shared between pages, othewise maintenance would quickly grow into nightmare. The fact that the loader is <em>recursive</em> allows a large ToC to be split into multiple, manageable parts. This way, web authors can work simultaneously on different parts of the web site without collisions.</p>
+
+<h2 cbc>Using the Fetch API</h2><div>
+
+<p>Resources can be loaded with the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"><tt>Fetch</tt> API</a>:</p>
+
+<figcaption class="listing"></figcaption><pre>
+fetch ( "http://example.com/fragment.txt" )
+  .then ( response => response.text ( ) )
+  .then ( text => targetElement.innerHTML = text )
+  .catch ( e => console.error( "Failed to load fragment.txt: ", e ));
+</pre>
+
+<p>Fetch( ) returns a <tt>Promise</tt> which fulfills if when the requested resource from the server arrives at the client. The response contains status information and the resource in the response body, which can be extracted with the <tt>text( )</tt> method. The text is then assigned to the innerHTML of an element in the document.</p>
+
+<p>The <tt>catch</tt> handler is called in case of network errors. Note that a 404 (not found) error is not considered an error, because the server responded with a valid response (which contains the error information "Not found"). The browser console window has more details on a 404 error like the requested URL. If you like, you can check <tt>response.ok</tt> like so:</p>
+
+<figcaption class="listing"></figcaption><pre>
+.then ( response => response.ok ? response.text( ) : "Not found: " + url )
+</pre>
+
+<!-- Using the Fetch API --></div>
+
+<h2 cbc>Recursive Fetch</h2><div>
+
+<p>A fragment container in the HTML document provides the necessary information for the loader in the <tt>load-src</tt> attribute:</p>
+
+<figcaption class="listing"></figcaption><pre>
+&lt;div load-src="fragment-url.htm"&gt;&lt;/div&gt;
+</pre>
+
+<p>The loader collects all elements with a <tt>load-src</tt> attribute and retrieves the fragments with the fetch algorithm from above:</p>
+
+<figcaption class="listing"></figcaption><pre>
+function loadFragments ( ) {
+    document.body.querySelectorAll( "[load-src]" ).forEach (( e ) =&gt; {
+        let url = e.getAttribute( "load-src" );
+        console.log( "Loading: ", url );
+        let promise = fetch( url )
+            .then ( response =&gt; response.ok ? response.text( ) : "Not found: " + url )
+            .then ( text =&gt; e.innerHTML = text )
+            .catch( reason =&gt; console.error( "Request failed: ", reason ));
+        } ) }
+</pre>
+
+<p>An HTML fragment may contain additional fragment containers. The problem is that the fact is not know before the fragment was loaded into the document. So the algorithm is modified with a little recursion code:</p>
+
+<figcaption class="listing"></figcaption><pre>
+function loadFragments ( <hi>container = document.body</hi> ) {
+    const containers = container.querySelectorAll( "[load-src]" );
+    for ( let i = 0 ; i < containers.length ; i ++ ) {
+        let e = containers[ i ];
+        let url = e.getAttribute( "load-src" );
+        if ( <hi>recursionCheck( e, url )</hi>) {
+            e.innerHTML = "Loader recursion error" ;
+            console.error ( e.innerHTML );
+            continue;
+            }
+        console.log( "Loading: ", url );
+        let promise = fetch( url )
+            .then ( response =&gt; response.ok ? response.text( ) : "Not found: " + url )
+            .then ( text =&gt; e.innerHTML = text )
+            .then (( ) =&gt; rebaseRelativeUrls( e, stripFilename( url )))
+            .then (( ) =&gt; <hi>loadFragments( e )</hi>)
+            .catch( reason =&gt; console.error( "Request failed: ", reason ));
+        } }
+</pre>
+
+<p>On the first call, the document body is the container which is searched for elements with a <tt>load-src</tt> attribute. On subsequent calls, the loaded containers are passed in the argument. This prevents infinite recursion. A different approach could remove the <tt>load-src</tt> attribute from the processed fragment container elements.</p>
+
+<p>One caveat remains: If a fragment document loads an already loaded parent fragment, an infinite recursion occurs. To prevent this, a recursion check has been added:</p>
+
+<figcaption class="listing"></figcaption><pre>
+function recursionCheck( e, url ) {
+    while (( e = e.parentNode ) && e !== document ) 
+	    if ( e.getAttribute( "load-src" ) === url ) return true;
+    }
+</pre>
+
+<p>The code walks along the chain of parent nodes and checks for a <tt>load-src</tt> attribute which matches the current url. If there is one, the function returns true, which in turn prevents the caller from loading this fragment again.</p>
+
+<p>Note that is is still possible to have the same HTML fragment loaded multiple times in different parts of the document.</p>
+
+<!-- Recursive Fetch --></div>
+
+<h2 cbc>Completion Handlers</h2><div>
+
+<p>There are tasks that can only be carried out when all document fragments have been loaded. So we must have a means to monitor requests and their completion.</p>
+
+<p>Fetch( ) returns a promise, and the Promise prototype has a <tt>allSettled</tt> method, which takes and array of promises and runs the provided function when all promises have settled (fulfilled or rejected). The idea was to add those promises to a published array, like so:</p>
+
+<figcaption class="listing"></figcaption><pre>
+export let requests = [ ] ;
+
+async function loadResources ( container ) { 
+    let fragmentContainers = container.querySelectorAll( "[load-src]" );
+    for ( let i = 0 ; i < fragmentContainers.length ; i ++ ) {
+        let fragmentContainer = fragmentContainers[ i ];
+        await loadResource( fragmentContainer );
+        } 
+    }
+
+function loadResource ( container ) {
+    let url = container.getAttribute( "load-src" );
+    url = prefixUrl( baseUrl, url );
+    let request = fetch( url )
+        .then( response =&gt; response.text( ))
+        .then( html =&gt; container.innerHTML += html )
+        .then( ( ) =&gt; await loadResources( container))
+        .finally( ( ) =&gt; console.log( `Request settled: ${url}` ));
+    requests.push( request );
+    console.log( "Requesting: ", url );
+    }
+</pre>
+
+<p>The page code could then define some completion handlers:</p>
+
+<figcaption class="listing"></figcaption><pre>
+loader.loadResources( document.body );
+Promise.allSettled( loader.requests )
+	.then( results => finalizeDocumentFunction );
+</pre>
+
+<p>The idea was that before the first promise settled in in the <tt>finally</tt> clause in <tt>loadResource</tt>, the algorithm goes into recursion and adds a new promise to the requests array.</p>
+
+<p>Unfortunately, it doesn't. When the first promise returned by <tt>fetch</tt> settles, the promise chain defined by the .then and .finally statements is executed. One of them calls <tt>loadResource</tt>, which adds the second fetch promise to the array. At this point, the array holds only one promise, the first, and it is settled. Which causes the document finalizer code to be executed right after the first request finished. In other words, the finalizer code worked on an incomplete document.</p>
+
+<p>The following approach uses a different approach. The function <tt>loadFragments</tt> returns a <tt>Promise</tt>that fulfills not before all fetch promises have been settled:</p>
+
+<figcaption class="listing"></figcaption><pre>
+export function loadFragments ( container = document.body ) {
+    <hi>const promises = [ ] ;</hi>
+    const containers = container.querySelectorAll( "[load-src]" );
+    for ( let i = 0 ; i &lt; containers.length ; i ++ ) {
+        let e = containers[ i ];
+        let url = e.getAttribute( "load-src" );
+        if ( recursionCheck( e, url )) {
+            e.innerHTML = "Loader recursion error" ;
+            console.error ( e.innerHTML );
+            continue;
+            }
+        console.log( "Loading: ", url );
+        <hi>promises.push</hi>( fetch( url )
+            .then ( response =&gt; response.ok ? response.text( ) : "Not found: " + url )
+            .then ( text =&gt; e.innerHTML = text )
+            .then (( ) =&gt; loadFragments( e ))
+            .catch( reason =&gt; console.error( "Request failed: ", reason )));
+        }  
+    return <hi>Promise.allSettled</hi>( promises ).then(( ) =&gt; <hi>Promise.resolve( "OK" )</hi>);
+    }
+</pre>
+
+<p>The page code then simplifies to the following:</p>
+
+<figcaption class="listing"></figcaption><pre>
+loader.loadFragments( ).then (( ) =&gt; {
+	console.log( "Loading finished" );
+	documentFinalizer( );
+	} ) ;
+</pre>
+
+<!-- Completion Handlers --> </div>
+
+<h2 cbc>Relative URLs Adaptation</h2><div>
+
+<p>Consider a document fragment that contains a relative link:</p>
+
+<figcaption class="listing"></figcaption><pre>
+&lt;a href="subfolder/someDocument.htm"&gt;Some Document&lt;/a&gt;
+</pre>
+
+<p>The equivalent absolute URL is</p>
+
+<figcaption class="listing"></figcaption><pre>
+/path-to-fragment/subfolder/someDocument.htm
+</pre>
+
+<p>Now consider the fragment loaded into another document in some other folder. The link now points to</p>
+
+<figcaption class="listing"></figcaption><pre>
+/path-to-document/subfolder/someDocument.htm
+</pre>
+
+<p>So we can conclude that importing an HTML fragment potentially breaks relative URLs if not countermeasure is taken. We have to rebase relative URLs:</p>
+
+<figcaption class="listing"></figcaption><pre>
+export function loadFragments ( container = document.body ) {
+    &hellip;
+    console.log( "Loading: ", url );
+    promises.push( fetch( url )
+        .then ( response =&gt; response.ok ? response.text( ) : "Not found: " + url )
+        .then ( text =&gt; e.innerHTML = text )
+        .then (( ) =&gt; <hi>rebaseRelativeUrls( e, stripFilename( url )</hi>))
+        .then (( ) =&gt; loadFragments( e ))
+        .catch( reason =&gt; console.error( "Request failed: ", reason )));
+    &hellip;
+    }
+</pre>
+
+<p>The corresponding function is called after the HTML code was added to the target container <tt>e</tt>. The container element and the path to the fragment is passed in the function call arguments. And here is the implementation:</p>
+
+<figcaption class="listing"></figcaption><pre>
+const reCleanup = new RegExp( "[^/]+/\\.\\./", "g" );
+
+function rebaseRelativeUrls ( container, basePath ) {
+    function rebase ( attributeName ) {
+        container.querySelectorAll( `[${attributeName}]` ).forEach( e =&amp;gt; { 
+            let url = e.getAttribute( attributeName );
+            if ( url[ 0 ] !== "/" &amp;&amp; url.indexOf( "://" ) &amp;lt; 0 ) 
+                e.setAttribute( attributeName, (basePath + url).replace( reCleanup, "" ) );
+            } ) ; }
+    rebase( "href" );
+    rebase( "src" );
+    rebase( "load-src" );
+    }
+</pre>
+
+<p>The code defines a nested function <tt>rebase</tt> which is called for every HTML element attribute that contains URLs (href, src and load-src). The code retrieves all elements with a matching attribute from the container element. A simple test is performed on the attribute value to determine whether it is a relative URL. (The test is not perfect but should fit the vast majority of cases.) If the test succeeds, the attribute value is rewritten. The new value is basically the relative path, prefixed with the absolute path to the HTML fragment, passed in the <tt>basePath</tt> argument.</p>
+
+<p>To tidy the result up, a regular expression is used to remove unnecessary subfolder excursions in the form of <tt>subfolder/../</tt>. Not strictly necessary, but makes the result look better.</p>
+
+<!-- Relative URLs Adaptation --></div>
+
+<h2 cbc>Support for Partitioned Website Projects</h2><div>
+
+<p>Large website project can be partitioned into partial projects, which makes project management easier. Usually there is a root project that holds the home page and some auxiliary pages and the toc.htm for the root pages. The sub-projects are then stored and developed independently, their output is published in root project subfolders. These subfolders are not included in the root project and thus are not stored in a root project code repository. At runtime, the sub-project's table-of -contents is loaded dynamically and integrated into the root project's table-of-contents.</p>
+
+<p>Each partial project has its own partial toc.htm. This file includes the sub-project's index.htm and often the parent nodes up to the site root document, and of course the entries for the content pages. The problem is that these auxiliary parent nodes are duplicates of their counterpart in the root toc.htm. They must be removed if the partial toc.htm is loaded at runtime and integrated into the root project toc.htm.</p>
+
+<p>An example should shed some more light on the matter:</p>
+
+<figcaption class="listing">Root-project toc.htm</figcaption><pre>
+&lt;ul class="collapsible"&gt;
+&lt;li&gt;&lt;a href="index.htm"&gt;Home&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="web-development/index.htm"&gt;Web Development&lt;/a&gt;
+    &lt;ul&gt;
+    &lt;li&gt;&lt;a href="web-development/html/index.htm"&gt;HTML&lt;/a&gt;
+        &lt;ul load-src="web-development/html/toc.htm"&gt;&lt;/ul&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="web-development/css/index.htm"&gt;CSS&lt;/a&gt;
+        &lt;ul load-src="web-development/css/toc.htm"&gt;&lt;/ul&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="web-development/svg/index.htm"&gt;SVG&lt;/a&gt;
+        &lt;ul load-src="<hi>web-development/svg/toc.htm</hi>"&gt;&lt;/ul&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="web-development/javascript/index.htm"&gt;JavaScript&lt;/a&gt;
+        &lt;ul load-src="web-development/javascript/toc.htm"&gt;&lt;/ul&gt;&lt;/li&gt;
+    &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+<p>The root project has 3 sub-projects, HTML, CSS, SVG and JavaScript. They are maintained in their own independent code repositories. The SVG sub-project has the following toc.htm:</p>
+
+<figcaption class="listing">SVG sub-project toc.htm</figcaption><pre>
+&lt;ul class="collapsible"&gt;
+&lt;li&gt;Home
+    &lt;ul&gt;
+    &lt;li&gt;Web Development
+        &lt;ul&gt;
+        &lt;li&gt;&lt;a href="index.htm"&gt;SVG &ndash; Scalable Vector Graphics&lt;/a&gt;
+            <hi>&lt;ul section-root&gt;</hi>
+            &lt;li&gt;&lt;a href="embedding.htm"&gt;Embedding SVG into HTML&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&hellip;&lt;/li&gt;
+            <hi>&lt;/ul&gt;</hi>&lt;/li&gt;
+        &lt;/ul&gt;&lt;/li&gt;
+    &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+<p>Note that the section-root node duplicates the same node in the root toc.htm, the one with the hilighted load instruction. This node, and its parent nodes, are considered auxiliary nodes and must be removed during the loading process. This is what the highlighted extension in the loader code does:</p>
+
+<figcaption class="listing">Removing auxiliary ToC nodes from partial ToC files</figcaption><pre>
+export function loadFragments ( container = document.body ) {
+    const promises = [ ] ;
+        &hellip;
+        console.log( "Loading: ", url );
+        promises.push( fetch( url )
+            .then ( response =&gt; response.ok ? response.text( ) : "Not found: " + url )
+            .then (( text ) =&gt; e.innerHTML = text )
+            <hi>.then (( ) =&gt; { if ( e.id !== "navigation-panel" ) {
+                <cc>// Remove auxiliary parent nodes for partial website projects</cc>
+                const sroot = e.querySelector( "[section-root]" );
+                if ( sroot ) e.replaceChildren( ...sroot.children );
+                } } )</hi>
+            .then (( ) =&gt; rebaseRelativeUrls( e, stripFilename( url )))
+            .then (( ) =&gt; loadFragments( e ))
+            .catch( reason =&gt; console.error( "Request failed: ", reason )));
+        }  
+    return Promise.allSettled( promises ).then(( ) =&gt; Promise.resolve( "OK" ));
+    }
+</pre>
+
+<p>If the parent node <tt>e</tt> is the navigation panel, it the loaded content should not be touched. Otherwise, it is a nested ToC, and a child node with a <tt>section-root</tt> attribute is searched. When found, the nodes between <tt>e</tt> and the section root node are considered auxiliary nodes. They are removed with the <tt>replaceChildren</tt> function call.</p>
+
+<p>One simple instruction, lots of effect. It's always worth studying the docs&hellip;</p>
+
+<!-- Support for Partitioned Website Projects --></div>
+
+</div><script type="module" src="/inc/page.js"></script></body></html>

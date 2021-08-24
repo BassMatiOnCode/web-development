@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 95" version="1.1">
+	<style>
+		text { font-size:6px; font-family:'Arial Narrow'; fill:#000000; stroke:none; }
+		text.axis { font-size: 4.5px; }
+		path { fill: none; stroke-width: 0.8; stroke-linecap:round }
+		path.axis { fill:none; stroke:black; stroke-width:0.47; }
+	</style>
+	<defs>
+		<marker orient="auto" refY="0.0" refX="0.0" id="marker1314" style="overflow:visible;">
+			<path style="stroke-width:0.625; fill:#000000;" d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z " transform="scale(0.6) rotate(180) translate(0,0)" />
+		</marker>
+	</defs>
+
+	<path class="axis" style="marker-end:url(#marker1314)" d="M 0,89.958332 H 149.19138"/>
+	<path class="axis" style="marker-end:url(#marker1314)" d="M 5.2916666,95.249999 V 5.2916666" />
+	<path style="stroke:#db4a4a;" d="m 5.2916699,89.958336 c 0,0 2.7508769,-11.783479 20.4928121,-24.202833 C 46.639799,50.915402 149.19138,47.724169 149.19138,47.724169" />
+	<path style="stroke:#2486b0;" d="m 5.2916699,89.958336 c 0,0 7.7377361,-7.346706 24.3579251,-8.704968 25.109912,-2.052073 63.2782,-1.592075 74.797845,-26.819406 6.54475,-14.332603 13.54049,-32.725876 44.74394,-36.657684"/>
+	<path style="stroke:#2e951e;" d="M 5.2916699,89.958336 C 13.615442,79.512656 14.47013,73.101634 45.552562,68.04582 72.11227,63.718484 83.055131,38.443362 96.495959,25.997303 101.89653,20.227963 114.26574,11.361418 149.19138,11.442047"/>
+	<text x="45" y="54">1</text>
+	<text x="88" y="78">2</text>
+	<text y="70" x="61">3</text>
+	<text class="axis" x="-26" y="11.631724" transform="rotate(-90)">Knowledge</text>
+	<text class="axis" x="137" y="86">Time</text>
+</svg>

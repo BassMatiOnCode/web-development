@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" change-date="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-02" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-17" />
+<meta name="version" content="2" />
+<meta name="categories" content="Programming > Web Design > Toolbox" />
+<meta name="tags" content="web, design, toolbox, programming" />
+<meta name="description" content="The web design client-side toolbox provides a mini-framework for creating small to large web sites. Everything is kept small, simple and as efficient as possible. Logic is placed on the client-side (the browser) wherever possible. The toolbox modules can be combined and adapted as required." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+
+<title>Bassmati on Code - Web Design Toolbox</title>
+ 
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>The Web Design Toolbox</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Motivation</h2><div>
+
+<p>The primary motivation for creating this web design toolbox was to radically simplify web development &ndash; without heavyweight IDEs, website design tools, code generators, let alone content management systems (CMS), without toolchains, pre and post-processors, without server-side processing, templates, includes. With the least possible overhead for the developer. Creating a new web site should only require the creation of a project folder in the file system, a table-of-contents file, the instantiation (or copy & paste) of a page template, firing up a text editor and writing content in HTML. And viewing the results in a browser.</p>
+
+<p>It should be possible for any person who knows only a handful of HTML tags, such as H1&hellip;H6 (headings), P (paragraphs), OL, UL (ordered and unordered lists), IMG (images), TABLE (tables (sic!)), and A (links), to write web pages and maintain the table of contents (i. e. the site map).</p>
+
+<p>There should be no size limitation. From a single page to enterprise websites, from a one-man-team to large development teams working concurrently, everything should be possible &ndash; and <em>manageable</em>.</p>
+
+<p>Processing should be done on the client side, wherever possible. Therefore a simple static web server is absolutely sufficient. No need for PHP, JSP, ASP and what not. This opens up a whole lot of hosting opportunities for the small budget, whithout sacrificing performance and throughput.</p>
+
+<p>Last but not least, the results should be beautiful, and perfectly rendered on any device, TV sets, desktops, laptops, tablets, smartphones, or small devices with a display. Out of the box, with no coding for the screen size or orientation.</p>
+
+<p>It is possible with a set of toolbox components that work silently behind the scenes to make the life of a web developer easier.</p>
+
+<!-- Motivation --></div>
+
+<h2 cbc>Goals</h2><div>
+
+<ul class="spaced-items">
+<li>No special IDE or website design tool should be necessary. Any simple text or code editor should be sufficient. This includes the opportunity to work on pages with a text editor on mobile phones.</li>
+<li>Effective use of the browser cache: Script files, CSS files, and HTML fragments tend to be small and static, and therefore are perfect candidates for caching in the browser.</li>
+<li>No toolchain for preprocessing, text template expansion, minification and packaging should be required. An exception is TypeScript code, which must be compiled into JavaScript before it can be sent to browsers.</li>
+<li>Elimination of redundancy: Identical copies of HTML and CSS code on every page (headers, footers, toolbars, navigation, etc.) make changes difficult and increase maintenance effort. Therefore redundant code is moved to re-usable toolbox components and loaded asynchronously.</li>
+<li>Client-side processing wherever possible: Leveraging the power of client machines instead of putting the burden on the server greatly improves throughput. In fact, most websites can be served from static webservers.</li>
+<li>Page preview from the file system: While authoring a web page, a preview can be rendered in the browser without the need for a web server. The author can focus on content without distraction.</li>
+<li>Responsive layout out of the box.</li>
+<li>Components adhere to the ES2016 JavaScript Modules standard.</li>
+<li>No redefinition of CSS defaults: Stylesheets are designed to leverage the browser defaults wherever possible. CSS rules override defaults only if necessary. This keeps the code simple and easily customizable, without undesired side-effects.</li>
+<li>Website partinioning: Partial table-of-contents files separate site navigation content and associated content into </li>
+</ul>
+
+<!-- Design Goals --></div>
+
+<h2 cbc>Website Design Tools?</h2><div>
+
+<p>A beginner is faced with the following choice:</p>
+
+<ol type="a" class="spaced-items">
+<li>Lay down a bundle of bucks and buy a commercial (and usually heavyweight) <a href="https://en.wikipedia.org/wiki/Website_builder">website design tool</a>, such as Microsoft FrontPage, Dreamweaver or similar, </li>
+<li>Use a simple text editor and work directly with the core web technologies (HTML, CSS, JavaScript, SVG et cetera).</li>
+</ol>
+
+<p>Figure 1 illustrates the situation:</p>
+
+<div class="indent">
+<figcaption>Figure 1: Path decision</figcaption>
+<object data="./img/fig-001.svg"  width="200" height="180"></object>
+</div>
+
+<p>Considering the wealth of HTML tags and CSS attributes, the second path looks frightening. And JavaScript is a beast of its own. So it is obvious to take the first route and buy the necessary knowlege in a box. Or use a freeware design tool. But there are a number points to consider:</p>
+
+<ul class="spaced-items" style="list-style-type: circle;">
+<li>A website design tool presents an abstraction of the underlying core web technologies to the user, and it is not clear which parts of the base technologies are inaccessible through the tool.</li>
+<li>A design tool can easily grow much more complex than the underlying base technologies.</li>
+<li>A design tool must implement a simplified abstraction of the underlying core technologies, and thereby introduces limitations.</li>
+<li>A design tool may implement a layout engine, but it is hard, if not impossible, to surpass the capabilities of modern browsers.</li>
+<li>Many design tools decorate the generated HTML code with loads of metadata information which is not necessary for rendering in the browser. This makes the HTML code hard to read and understand.</li>
+<li>A design tool never generates optimized code. In fact, the generated code is full of repeated code fragments, attributes, styles, et cetera.</li>
+<li>A fool with a tool is still a fool.</li>
+</ul>
+
+<p>The core web technologies imply a certain, well tested design philosophy, which has evolved over decades. Likewise, web browsers have evolved and converged towards a common standard. Knowing what's possible at the basis and what's not is key to successful design, and can be But if you are proficient with the core technologies, then what's the benefit of a design tool?</p>
+
+<!-- Website Design Tools? --></div>
+
+<h2 cbc>Learning Curves</h2><div>
+
+<p>Figure 1 illustrates typical learning curves for different development approaches: </p>
+
+<figcaption>Figure 1: Typical learning curves</figcaption>
+<object class="box" data="./img/fig-003.svg" type="image/svg+xml" width="400"></object>
+
+<p>Curve 1 represents a website design tool user. Early success with simple designs at the beginning is followed by an early knowledge saturation, caused by isolation of users from the core web technologies.</p>
+
+<p>Curve 2 represents a designer on bare metal. There is some early success, but then follows a long path of learning before curve 1 is bypassed. However, knowledge saturation appears at a much higher level.</p>
+
+<p>Curve 3 represents a developer with a web design toolbox. Very little base technology knowledge is required at the beginning. Ready-made toolbox components lift the heavy burden of learning a lot of details. Studying and tweaking existing components or creating entirely new components pave the path to core technology mastery. As a result, knowledge saturation appears much later at a much higher level.</p>
+
+<!-- Learning Curves --></div>
+
+<h2 cbc>Content Management Systems?</h2><div>
+
+<p>You might think about full-featured CMS. But, what does that mean: <em>Manage</em>? Multiple languages? That's a no brainer with language-specific subfolders. Access permission management, so that users can create and edit content? That's the domain of network administrators. Integrated editors running in the browser? There are plenty of free and commercial programming editors and IDEs that outperform in-browser editors easily. Skins? Well, we know how to switch to a different version of <tt>colors.css</tt>, or not? Markdown is easier than HTML? Well, that's debatable. But for sure, markdown lets us only access a small subset of HTML. And who likes it to be constrained?</p>
+
+<!-- Content Management Systems? --></div>
+
+<h2 cbc>Features</h2><div>
+
+<p>A standard web page may contain a header, a main toolbar, an uplink list bar, a footer, and a site navigation panel which is collapsed by default. The navigation panel contains the complete table-of-contents (aka site-map) in form of a tree structure. The tree nodes are collapsible, so that even a large web site can be efficiently displayed in a small screen area.</p>
+
+<p>The path to the current document is highlighted, so the reader always knows where to find the current document.</p>
+
+<p>Large pages can be structured with collapsible block elements, and they can be nested as required. Toolbar command buttons allow to expand and collapse the entire document, so the reader can quickly drill down from an overview to the desired document portion.</p>
+
+<p>An asynchronously recursive document fragment loader component allows to re-use HTML fragements in many pages. This avoids a lot of maintenance effort, because a fragment exists only once, but shown in many places. HTML fragments can even be nested without limits.</p>
+
+<p>An auto-number component can supply complex numbering schemes, similar to the HTML ordered list (OL) element, but more flexible. Interrupted ordered lists no longer require to adjust starting number updates if the list is modified.</p>
+
+<p>Most components are a combination of a JavaScript module and a related CSS file. The CSS code is kept so simple that "skins" are not needed. Just change what you want, either hardcoded at design-time, or dynamically at runtime.</p>
+
+<p>Web authors are not required to use a certain development tool (IDE). A simple text editor (even on mobile small devices) is sufficient.</p>
+
+<p>A web server is not needed for authoring pages. A browser can be used to render the pages from the file system. However, there are some restrictions: JavaScript modules cannot be loaded over the file:// protocol, so only the pure but correctly formatted page content will show up in the browser. Which is quite nice for a content author, he or she can concentrate on the content. No distractions from toolbars, headers, et cetera.</p>
+
+<p>To view the full functionality, a small web server is required. For example, the Deno file-server, the Node http-server or others are sufficient. No need for full-fledged tanks like IIS or Apache.</p>
+
+<p>And finally, everything is client-side. What previously was done with server-side template engines, can now be done with the client-side fragment loader and standard HTML template elements. The web server can now be reduced to a high-performance static file server like NGINX with greatly improved throughput.</p>
+
+<p>A data adapter is under development. It can be used to connect web pages to server-side data, bi-directional.</p>
+
+<!-- Toolbox Features --></div>
+
+<h2 cbc>Components Overview</h2><div>
+
+<p>The toolbox provides a number of useful components. Some are mandatory, others optional.</p>
+
+<h3 cbc>Page Component</h3><div>
+
+<p>The page component determines the page layout structure, and provides the frame for content authoring. Additional components such as header, footer, toolbar and navigation panel are loaded automatically at run-time, so that repetitive HTML code is minimized and maintenance effort is reduced to the absolute minimum.</p>
+
+<p>Part of the page component is a set of customizable page templates. A page template defines the visual document structure.</p>
+
+<!-- Page Template --></div>
+
+<h3 cbc>Header</h3><div>
+
+<p>The header component implements the top of the page, usually the website logo and name. A click on the header navigates the browser to the home page or opens the navigation panel.</p>
+
+<!-- Header --></div>
+
+<h3 cbc>Footer</h3><div>
+
+<p>The footer component implements the bottom of the page, and presents some document statistics such as author, modification date and document version. A script pulls this information out of the META elements in the HEAD of the document. </p>
+
+<p>A second row provides standard links to the home page, legal information, the current section home, first, previous, next and last page in the section. Another script pulls this information out of the navigation component after site navigation content has been loaded.</p>
+
+<!-- Footer --></div>
+
+<h3 cbc>Toolbar</h3><div>
+
+<p>The toolbar component provides buttons for site navigation and collapsible content control out of the box. Other buttons can be added site-wide or for individual pages if required.</p>
+
+<!-- Toolbar --></div>
+
+<h3 cbc>Site Navigation</h3><div>
+
+<p>The navigation component loads the site map, a kind of table-of-contents for the entire web site. The information is organized in a tree structure with collapsible nodes, so that even very large websites can be presented neatly and organized.</p>
+
+<!-- Site Navigation --></div>
+
+<h3 cbc>Collapsible Blocks</h3><div>
+
+<p>The collapsible blocks control component automatically identifies block controllers (which exhibit the expand/collapse icons), decorates them and implements the control and transition logic. To make an HTML element a collapsible block controller, simply add a <tt>cbc</tt>. The component takes care of the rest.</p>
+
+<!-- Collapsible Blocks --></div>
+
+<h3 cbc>Document Fragment Loader</h3><div>
+
+<p>The recursive document fragment loader, as the name suggests, loads document fragments at run-time. If an HTML document includes elements with a <tt>load-src</tt> attribute, the referenced resource is loaded and integrated into the fragment container element. The loader implementation works recursively, so a fragment may contain additional fragments. Infinite loop detection prevents loading of a parent container into a nested child container.</p>
+
+<p>The loader provides a simple hook to run scripts to be run when the document and fragments loading is completed.</p>
+
+<p>The loader is extensively used by other components, and can be used easily to load content "on demand".</p>
+
+<!-- Document Fragment Loader --></div>
+
+<h3 cbc>List Numerator</h3><div>
+
+<p>The list numerator component extends the concept of OL start attributes to automatically enumerate named ordered lists. This component is useful if an ordered list is scattered into multiple partial lists, which would otherwise break the automatic enumeration of ordered lists provided by the browser layout engines.</p>
+
+<!-- List Numerator --></div>
+
+<h3 cbc>SVG Element Generator</h3><div>
+
+<p>The SVG generator component creates an inline SVG element and integrates it into the document.</p>
+
+<p>SVG images can be loaded from an external resource into IMG and OBJECT elements, but for privacy reasons, the SVG code cannot reference external resources, such as stylesheets. This prevents individual SVG drawing elements (for example the stroke color of toolbar buttons) to be styled uniformly by a site-wide CSS declaration.</p>
+
+<p>This limitation does not apply to SVG elements that are directly embedded into the document. To simplifiy the task, the SVG element is automatically decorated with attributes. The individual SVG drawing elements (ellipses, lines, paths) are passed in as string and thereby can be loaded dynamically by the loader component, or defined statically as string constants in the JavaScript code.</p>
+
+<!-- SVG Element Generator --></div>
+
+<!-- Components --></div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

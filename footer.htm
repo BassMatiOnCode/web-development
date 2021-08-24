@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm"version="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-16" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-16" />
+<meta name="version" content="1" />
+<meta name="categories" content="Programming > Web Design > Toolbox" />
+<meta name="tags" content="web, design, toolbox, header, component" />
+<meta name="description" content="The footer component creates a page footer element in the document, retrieves metadata from META elements and generates statistics content. When the fragment loader has finished, a second line with standard navigation links is appended." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+
+<title>Web Design Toolbox - Footer Component</title>
+ 
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>Footer Component</h1>
+
+<p id="page-abstract"></p>
+
+<p>Listing 1 shows the page init code:</p>
+
+<figcaption class="listing"></figcaption><pre>
+export function initPage ( ) {
+    const creationDate = getMetaData( "creation-date" );
+    const pageCreator = getMetaData( "author" );
+    const changeDate = getMetaData( "change-date" );
+    const pageEditor = getMetaData( "editor" );
+    const pageVersion = getMetaData( "version", "0" );
+    let footer = document.createElement( "DIV" );
+    footer.id = "page-footer" ;
+    footer.innerHTML = `Created: ${creationDate} by ${pageCreator} \ 
+         &bull; Edited: ${changeDate} by ${pageEditor} \
+         &bull; Version: ${pageVersion} \
+         &lt;br/&gt;&lt;a href=\"/index.htm\"&gt;Home&lt;/a&gt; | ` ;
+    document.body.appendChild( footer );
+    }
+</pre>
+
+<p>The function retrieves metadata and uses the information to fill a template string, which is then inserted into the footer element. The element is then appended to the end of the document.</p>
+
+<p>Listing 2 shows the metadata retrieval function. An optional <tt>defaultValue</tt> argument is preset with some meaningful content, just in case the requested META element does not exist:</p>
+
+<figcaption class="listing"></figcaption><pre>
+function getMetaData( name, defaultValue="?" ) {
+    const e = document.querySelector( `meta[name='${name}']` );
+    if ( ! e ) return ;
+    let value = e.getAttribute( "content" );
+    return value || defaultValue ;
+    }
+</pre>
+
+<p>The next function can only be called successfully after the loader has finished loading document fragments. This includes the navigation panel content. The navigation component also must have analyzed the content and some standard navigation links identified and published. These links are used by the function below to create a list of A elements in the footer:</p>
+
+<figcaption class="listing"></figcaption><pre>
+export function addLinks( navigation ) {
+    let s = "" ;
+    if ( navigation.parent !== "#" ) s += `&lt;a href="${navigation.parent}"&gt;Up&lt;/a&gt; | `
+    if ( navigation.first !== "#" ) s += `&lt;a href="${navigation.first}"&gt;First&lt;/a&gt; | `
+    if ( navigation.previous !== "#" ) s += `&lt;a href="${navigation.previous}"&gt;Previous&lt;/a&gt; | `
+    if ( navigation.next !== "#" ) s += `&lt;a href="${navigation.next}"&gt;Next&lt;/a&gt; | `
+    if ( navigation.last !== "#" ) s += `&lt;a href="${navigation.last}"&gt;Last&lt;/a&gt; | `
+    s += '&lt;a href="/legal.htm"&gt;Legal&lt;/a&gt;' ;
+    document.getElementById( "page-footer" ).innerHTML += s ;
+    }
+</pre>
+
+<p>Listing 4 finally shows the styling of the footer elements. Nothing special here:</p>
+
+<figcaption class="listing"></figcaption><pre>
+#page-footer {
+    padding-top : 20px ;
+    margin-top: 40px ;
+    border-top : 1px solid silver;
+    text-align : center ;
+    font-size : 10px ;
+    }
+
+#page-footer a {
+    text-decoration : none ;
+    }
+
+#page-footer a:hover {
+    text-decoration : underline ;
+    }
+</pre>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

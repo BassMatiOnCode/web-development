@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" change-date="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-07-21" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-07-21" />
+<meta name="version" content="2" />
+<meta name="categories" content="Programming > Web > Web Design Toolbox" />
+<meta name="tags" content="programming, web, toolbox, navigation, panel, side, hidden, sliding" />
+<meta name="description" content="Describes a hidden side panel with website navigation content (table of contents)." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+
+<title>Web Design Toolbox - Navigation Side Panel</title>
+ 
+</head><body><div id="page-header"></div><div id="main-toolbar"><div id="content">
+
+<h1 class="page-title">Navigation Side Panel</h1>
+
+<p id="abstract">Describes a hidden side panel with website navigation content (table of contents).</p>
+
+<div class="menu toolbar"><button name="expandAll" title="Show collapsed content before using the browser's text search function.">Expand all</button> <button name="collapseAll" title="Show collapsed content before using the browser's text search function.">Expand all</button>
+</div>
+
+
+
+<h2>HTML Structure</h2><div>
+
+<p>The navigation panel is a DIV element in a layer obove the page content, that is normally collapsed on the left side of the page window. When the navigation button is clicked, the panel expands into the viewing area and shows a link list to the parts of the web site:</p>
+
+<figcaption>Listing 1</figcaption>
+<pre>
+&lt;div id="navigation-panel" snippet-src="/toc.htm"&gt;&lt;/div&gt;
+</pre>
+
+<p>Usually there is a <tt>snippet-src</tt> attribute defined which specifies the content source that is shared between pages. Alternatively, a content can be hard coded, for example, like so:</p>
+
+<figcaption>Listing 2</figcaption>
+<pre class="nobox">
+&lt;div id="navigation-panel" &gt;
+&lt;ul class="link-list"&gt;
+&lt;li&gt;&lt;a href="index.htm"&gt;Home&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="products.htm"&gt;Products&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="services.htm"&gt;Services&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="about.htm"&gt;About us&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+
+<p class="note">If there is no navigation-panel element on the page, the page init code creates one similar to listing 1.</p>
+
+<p>Then there is a button. When clicked, the navigation panel expands to the right and reveals its content. When clicked again, the navigation panel collapses and gets out of view.</p>
+
+<figcaption>Listing 3</figcaption>
+<pre>
+&lt;div class="navigation-button"&gt;&lt;/div&gt;
+</pre>
+
+<!-- HTML Structure --></div>
+
+<h2>CSS</h2><div>
+
+<p>The navigation panel is styled as block with an absolute position, so we can use the top, left, bottom and right attributes to position it over on the page:</p>
+
+<figcaption>Listing 4</figcaption>
+<pre>
+#navigation-panel {
+    display : block ;
+    white-space : nowrap;
+    overflow-x : auto ;
+    position : absolute ;
+    left : 0px ;
+    top : 0px ;
+    right : 0px ;
+    bottom : 0px ;
+    max-width : 0px ;
+    padding-top : 50px ;
+    background-color : #c9ed5e ;
+    transition : max-width 0.4s linear ;
+    }
+</pre>
+
+<p>The max-width attribute is set to 0px, which effectively collapses the panel. Actually, this is not really necessary, because the script code initializes the max-width also. But if the document is served via file:// protocol, the script will not be loaded for security reasons. An identical setting in the CSS ensures that the navigation panel does not interfere with the page content during development.</p>
+
+<p>A transition specification on the max-width property ensures a smooth operation.</p>
+
+<p>The navigation button is also positioned absolute, left, top, width and height attributes define size and position:</p>
+
+<figcaption>Listing 5</figcaption>
+<pre>
+.navigation.button {
+    background-image : url("/inc/img/drawing-1.svg");
+    background-repeat : no-repeat ;
+    background-position : center, center ;
+    background-size : contain ;
+    position : absolute;
+    width : 32px ;
+    height : 32px ;
+    left : 10px ;
+    top : 10px ;
+    }
+</pre>
+
+<p>A background image provides a visual clue to the function.</p>
+<p>Note that the button z position must be higher than the navigation panel, otherwise the expanded navigation panel would hide the button.</p>
+
+<!-- CSS --></div>
+
+<h2>Script Code</h2><div>
+
+<p>The script implements a JavaScript module, which exports a <tt>initPage</tt> function. The code searches for an element with the id "navigation-panel". If there is none, a DIV element is created, configured, and appended to the DOM.</p>
+
+<figcaption>Listing 6</figcaption>
+<pre>
+let navpanel = document.getElementById( "navigation-panel" );
+
+export function initPage ( ) {
+    <cc>// Create and configure the navigation sidepanel</cc>
+    if ( ! navpanel ) {
+        navpanel = navpanel || document.createElement( "DIV" );
+        navpanel.id = "navigation-panel" ;
+        navpanel.setAttribute( "snippet-src", "/toc.htm" );
+        }
+    navpanel.style.maxWidth = "0px" ;
+    navpanel.addEventListener( "click", transitionEndHandler );
+    document.body.insertBefore( navpanel, null );	
+    <cc>// Create and configure the navigation button</cc>
+    let navbutton = document.createElement( "DIV" );
+    navbutton.className = "navigation button" ;
+    navbutton.addEventListener( "click", buttonClickHandler );
+    document.body.insertBefore( navbutton, null );	
+    }
+</pre>
+
+<p>Similarly, the navbutton is created and appended to the DOM.</p>
+
+<p>The button gets a click event handler attached:</p>
+
+<figcaption>Listing 7</figcaption>
+<pre>
+function buttonClickHandler ( evt ) {
+    if ( navpanel.style.maxWidth === "0px" ) navpanel.style.maxWidth = 
+        Math.min( navpanel.scrollWidth + 10, document.body.scrollWidth ) + "px" ;
+    else {
+        if ( navpanel.style.maxWidth === "none" ) navpanel.style.maxWidth =
+            document.body.scrollWidth + "px" ;
+        window.requestAnimationFrame( ( ) => navpanel.style.maxWidth = "0px" ) ;
+        }
+    evt.preventDefault( );
+    evt.stopPropagation( );
+    }
+</pre>
+
+<p>If the panel is collapsed to zero-width, the max-width attribute is set to the content width or the page width, whichever is smaller. This expands the panel with a timing characteristic defined in the <tt>transition</tt> style attribute. Otherwise, the panel is collapsed to zero width. This cannot be done in a single step, because in the expanded state, the panel may have no max-width attribute value. This is caused by the transition end event handler:</p>
+
+<figcaption>Listing 8</figcaption>
+<pre>
+function transitionEndHandler ( evt ) {
+    if ( evt.target.style.maxWidth === document.body.scrollWidth + "px" )
+        evt.target.style.maxWidth = "none" ;
+    evt.preventDefault();
+    evt.stopPropagation( );
+    }
+</pre>
+
+<p>When the panel is fully expanded to the maximum width, i. e. the width of the document body, its max-width style attribute is set to "none", which in turn puts the <tt>right : 0px</tt> style attribute in effect. In other words, the navigation panel will follow width changes of the browser window.</p>
+
+<p>If the panel width was determined by the content width, no such tweak is made.</p>
+
+<!-- Script Code --></div>
+
+<h2>Handling 404 Errors</h2><div>
+
+<p><a href="https://tomduffytech.com/promise-all-error-handling/">Tom Duffy</a></p>
+
+<!-- Handling 404 Errors --></div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

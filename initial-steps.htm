@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" change-date="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-04" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-04" />
+<meta name="version" content="1" />
+<meta name="categories" content="Web Design > Toolbox > Overview" />
+<meta name="tags" content="web, design, toolbox, initial, steps" />
+<meta name="description" content="To start web site development, there are a number of steps to follow. The list below gives an overview of the procudure in simple, easy to follow steps." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+ 
+<title>Web Design Toolbox - First Steps to Create a Web Site</title>
+
+</head><body><div id="page-header"></div><div id="main-toolbar"><div id="content">
+
+<h1>Initial Steps to Set Up a Web Site</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Step 1 &ndash; Create the Infrastructure</h2><div>
+
+<ol>
+<li>Extract contents of <tt>toolbox-inc-min.zip</tt> to the site root folder. This creates the <tt>index.htm</tt> and <tt>toc.htm</tt> files, as well as the <tt>inc</tt>, <tt>fnt</tt> and <tt>img</tt> subfolders with a minimum set of files to create a working infrastructure.</li>
+<li>Create or customize one or more HTML page template files.</li>
+<li>Optional: Integrate page templates into the "new" command of Windows Explorer (or your system's file system explorer) to avoid copy and paste duplication.</li>
+<li>Create the web site root folder.</li>
+<li>Edit <tt>inc/header.js</tt> and <tt>.css</tt> files to define the logo image, header text and colors. More details on how to achieve this will follow.</li>
+<li>Edit <tt>index.htm</tt> and supply some initial content.</li>
+</ol>
+
+<!-- Create the Infrastructure --></div>
+
+<h2 cbc>Step 2 &ndash; Add Pages</h2><div>
+
+<p>To add a new page,&hellip;</p>
+
+<ol>
+<li>Create a copy of the page template and rename it to something meaningful, such as <tt>page-2.htm</tt>.</li>
+<li>Edit <tt>page-2.htm</tt> to give it some meaningful content. Put the bulk of the content inside the <tt>DIV id="content"</tt> element.</li>
+<li>Edit <tt>toc.htm</tt>, and add a new <tt>LI</tt> with a nested <tt>A</tt> element inside:</li>
+</ol>
+
+<figcaption>Listing 1: Adding page 2 to the table-of-contents</figcaption>
+<pre>
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="/index.htm"&gt;Home&lt;/a&gt;&lt;/li&gt
+<hi>&lt;li&gt;&lt;a href="/page-2.htm"&gt;Page 2&lt;/a&gt;&lt;/li&gt;</hi>
+&lt;/ul&gt;
+</pre>
+
+
+<h3>The HEAD Element in the Page Template </h3><div>
+
+<p>The <tt>HEAD</tt> element in the page template deserves a few words. It is shown in listing 3:</p>
+
+<figcaption>Listing 3: The HEAD element content</figcaption>
+<pre>
+&lt;!DOCTYPE html&gt;&lt;html lang="en-US"&gt;<hi>&lt;head&gt;</hi>
+&lt;meta charset="utf-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="template-info" file-name="empty.htm" version="2021-08-02" editor-name="usp" /&gt;
+&lt;meta name="<hi>author</hi>" content="usp" /&gt;
+&lt;meta name="<hi>creation-date</hi>" content="2021-08-04" /&gt;
+&lt;meta name="<hi>editor</hi>" content="usp" /&gt;
+&lt;meta name="<hi>change-date</hi>" content="2021-08-04" /&gt;
+&lt;meta name="<hi>version</hi>" content="1" /&gt;
+&lt;meta name="categories" content="Programming &gt; Web Design &gt; Toolbox" /&gt;
+&lt;meta name="tags" content="HTML, JavaScript, CSS, standard, page, structure" /&gt;
+&lt;meta name="<hi>description</hi>" content="A standard page has a number of standard elements: A header panel, a toolbar, a content container, a footer, and a navigation-side-panel, which is hidden initially." /&gt;
+&lt;<hi>title</hi>&gt;Web Design Toolbox - Standard Page Structure&lt;/title&gt;
+&lt;link rel="stylesheet" href="/inc/page.css" /&gt;
+<hi>&lt;/head&gt;</hi>
+</pre>
+
+<p>Without going into the details, there are some meta elements that are related to the specific page, such as author, change date, et cetera. It is a good habit to supply meaningful values there. Some of these fields are used to generate content for the footer element at the bottom of the page. The <tt>description</tt> and <tt>title</tt> fields are used by the browser and search engines and should always be filled with meaningful information. Additionally, the <tt>description</tt> field is used to generate the page abstract paragraph in the <tt>body</tt>, if present. Others, such as <tt>tags</tt> and <tt>categories</tt> are more related to entire web site and your personal search tools. These can safely be deleted from the template if you don't need them. Likewise, feel free to add your own meta elements to the template.</p>
+
+<!-- The HEAD Element in the Page Template --></div>
+
+<!-- Add Pages --></div>
+
+<h2 cbc>Step 3 &ndash; Preview the Page</h2><div>
+
+<p>This step is optional. To preview the page in your web browser, &hellip;</p>
+
+<ol>
+<li>Double-click on <tt>page-2.htm</tt> in Windows Explorer.</li>
+</ol>
+
+<p>You should see the formatted web page, but without header, footer, toolbar and navigation panel. This is okay, because the page init script will not be executed over the file:// protocol for security reasons. You can do proofreading, tweak the layout until you are satisfied with the results. Just remember to refresh the page in the browser after changes in the editor program.</p>
+
+<!-- Preview the Page --></div>
+
+<h2 cbc>Step 4 &ndash; Live Test on a Development Server</h2><div>
+
+<p>This requires to run small and simple web server, like <tt>Deno file-server</tt> or <tt>node http-server</tt>. No server-side processing is required, no CGI, no PHP. The server only must serve static files correctly over the http:// protocol, then all scripts should be working in the browser now.</p>
+
+<ol>
+<li>Run the script <tt>start-webserver.bat</tt> in the website root directory.</li>
+<li>Note the port number the server is listening on.</li>
+<li>Open a web browser, and type <tt>localhost:4507/page-2.htm</tt> into the address bar. Use the port number as given by the server. You should see the finished web page with a header, toolbar and footer.</li>
+<li>Click on the <tt>navigate</tt> button to open the naviation side-panel.</li>
+<li>Click the links to verify that they are working correctly.</li>
+</ol>
+
+<p>Remember to refresh the page to see the changes made in the editor.</p>
+
+<!-- Test the Page Integration--></div>
+
+<h2 cbc>Step 5 &ndash; Deployment to a Production Server</h2><div>
+
+<p>If you are developing in a professional environment, you certainly have a separate production web server. Publishing on a production server usually requires some form of copying the (modified) files from the development machine to the production server. Contact your administrators for details and access permissions.</p>
+
+<p>A private person may want to omit this step and develop the pages directly on the production server. This is perfectly okay. To prevent your customers from watching your progress, make shure not to add a link to the new page(s) to the <tt>toc.htm</tt> file. You can enter the page url explicitly into your browser's address box to test the page(s). When you are satisfied, just update the toc file(s) to make the new pages go online.</p>
+
+<!-- Deployment to a Production Server --></div>
+
+</div><script type="module" src="/inc/page.js" ></script>
+</body></html>

@@ -1,0 +1,154 @@
+<html><head>
+<style>
+[cbc] {
+	white-space : nowrap ;
+	margin-top : 3px;
+	margin-bottom : 3px ;
+	font-weight : normal ;
+	}
+  
+[cbc]+* {
+	max-height: 0px;
+	overflow: hidden;
+	transition: max-height 0.6s ease-out;
+	background-color : #E0E0E0;
+	}
+
+[cbc]>span {
+	display : inline-block ;
+	width : 20px ;
+	line-height : 100% ;
+	background-image : url(orange-plus-0.svg) ;
+	background-repeat : no-repeat ;
+	background-size : contain ;
+	background-position : center ;
+	margin-right : 10px ;
+	}
+	
+[cbc][expand]>span {
+	background-image : url(orange-minus-0.svg) ;
+	}
+
+body {
+	padding-top : 60px ;
+	}
+
+div.toolbar {
+	position : fixed;
+	top : 10px ;
+	left : 10px ;
+	}
+</style>
+</head><body onload="scrollToTarget()">
+
+<p><a href="example-11.htm#target-1">Target 1</a></p>
+<p><a href="example-11.htm#target-2">Target 2</a></p>
+<p><a href="example-11.htm#target-3">Target 3</a></p>
+<p><a href="example-11.htm#target-4">Target 4</a></p>
+<p><a href="example-11.htm#target-5">Target 5</a></p>
+<p><a href="example-11.htm#target-6">Target 6</a></p>
+
+<div style="height: 300px"> . </div>
+
+<h3 cbc>Click on this to expand/collapse the content block</h3><div id="target-1">Content</div>
+<h3 cbc>Click on this to expand/collapse the content block</h3><div id="target-2">Content</div>
+<h3 cbc>Click on this to expand/collapse the content block</h3><div id="target-3">content</div>
+<h3 cbc>Click on this to expand/collapse the content block</h3><div id="target-4">Content</div>
+<h3 cbc>Click on this to expand/collapse the content block</h3><div id="target-5">Content</div>
+<h3 cbc>Click on this to expand/collapse the content block</h3><div id="target-6">Content</div>
+
+<div style="height: 600px"> . </div>
+
+<script>
+function clickEventHandler ( ) {
+	if ( this.hasAttribute( "force-visible" )) this.removeAttribute( "force-visible" );
+	const expanding = this.toggleAttribute( "expand" );
+	const block = this.nextElementSibling;
+	if ( expanding ) block.style.maxHeight = block.scrollHeight + "px";
+	else {
+		block.style.maxHeight = block.scrollHeight + "px" ;
+		window.requestAnimationFrame( function ( ) { 
+			block.style.maxHeight = "0px" ;
+			} ) ; } } 
+
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i < controllers.length; i++ ) {
+	const controller = controllers[ i ];
+	controller.insertBefore( document.createElement( "span" ), controller.firstChild ).innerHTML = "&nbsp;" ;
+	if ( controller.hasAttribute( "expand" )) controller.nextElementSibling.style.maxHeight = "none" ;
+	controller.addEventListener( "click", clickEventHandler );
+	controller.nextElementSibling.addEventListener( "transitionend", function ( ) { 
+		// Remove max height limitation if block was expanded
+		if ( this.style.maxHeight !== "0px" ) this.style.maxHeight = "none" ;
+		} ) ; }
+
+function expandBlocks ( ) {
+	const controllers = document.querySelectorAll( "[cbc]:not([expand])" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		clickEventHandler.call( controllers[ i ] );
+		} }
+
+function collapseBlocks ( ) {
+	const controllers = document.querySelectorAll( "[cbc]" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		const controller = controllers[ i ];
+		if ( controller.hasAttribute( "expand" )) clickEventHandler.call( controller );
+		} }
+	
+function showContent ( ) {
+	const controllers = document.querySelectorAll( "[cbc]:not([expand])" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		const controller = controllers[ i ];
+		controller.setAttribute( "force-visible", "" );
+		controller.nextElementSibling.style.maxHeight = controller.nextElementSibling.scrollHeight + "px";
+		} }
+	
+function hideContent ( ) {
+	const controllers = document.querySelectorAll( "[cbc][force-visible]" );
+	for ( let i = 0; i < controllers.length; i++ ) {
+		const controller = controllers[ i ];
+		controller.removeAttribute( "force-visible" );
+		block = controller.nextElementSibling;
+		block.style.maxHeight = block.scrollHeight + "px" ;
+		window.requestAnimationFrame( function ( ) { 
+			this.style.maxHeight = "0px" ;
+			}.bind( block )) ; } }
+
+function expandPath ( node ) {
+		if ( ! node || node.tagName === "BODY" ) return;
+		const controller = node.previousElementSibling;
+		if ( controller && controller.hasAttribute( "cbc" )) {
+			controller.setAttribute( "expand", "" );
+			node.style.maxHeight = "none" ;
+			}
+		expandPath ( node.parentNode );
+		}
+
+function scrollTargetIntoView ( element ) {
+	// Expands all collapsible nodes between BODY and the specified element. 
+	// Make sure that all document fragments have been loaded when this function is called.
+	if ( typeof element === "string" ) element = document.getElementById( element );
+	if ( element ) {
+		expandPath( element );
+		window.setTimeout ( element.scrollIntoView, 3000 );
+		} }
+
+function scrollToTarget( ) {
+	console.log( "scolling..." );
+	const element = document.getElementById( document.location.hash.substr( 1 ));
+	expandPath( element );
+	window.requestAnimationFrame( function ( ) { element.scrollIntoView( ); console.log( "scrolled.") ; } ) ;
+	}
+
+</script>
+
+<div class="toolbar">
+<button onclick="expandBlocks()">Expand All</button>
+<button onclick="collapseBlocks()">Collapse All</button>
+<button onclick="scrollTargetIntoView( document.location.hash.substr( 1 ))">Scroll into View</button>
+</div>
+
+<script>
+//window.addEventListener( "load", (event) => { scrollTargetIntoView( document.location.hash.substr( 1 )); } ) ;
+</script>
+</body></html>

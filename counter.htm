@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm"version="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-16" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-16" />
+<meta name="version" content="1" />
+<meta name="categories" content="Programming > Web Design > Toolbox" />
+<meta name="tags" content="web, design, toolbox, counter, component, CSS" />
+<meta name="description" content="CSS counters are a powerful tool for enumerating arbitrary HTML elements by apperance in the document. The counter component provides automatic standard counters for code listings, images (figures) and tables on a web page. To activate them, simply add the appropriate counter classname to the FIGCAPTION element." />
+<title>Web Design Toolbox - Counter Component</title>
+
+<link rel="stylesheet" href="/inc/page.css" />
+
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>Counter Component</h1>
+
+<p id="page-abstract"></p>
+
+<p>By the way: The listings in this document are enumerated with this technique.</p>
+
+<p>Example: If you add the <tt>figure</tt> class name to a <tt>FIGCAPTION</tt> element, the figure caption will be automatically enumerated:</p>
+
+<figcaption class="listing">Example HTML code</figcaption><pre>
+&lt;figcaption <hi>class="figure"&gt;</hi>&lt;/figcaption&gt;
+&lt;img src="/inc/collapsible/orange-plus.svg"/&gt;
+&lt;figcaption <hi>class="figure"&gt;</hi>&lt;/figcaption&gt;
+&lt;img src="/inc/collapsible/orange-minus.svg"/&gt;
+&lt;figcaption <hi>class="figure"&gt;</hi>&lt;/figcaption&gt;
+&lt;img src="/inc/collapsible/orange-dot.svg"/&gt;
+</pre>
+
+<p>&hellip; you will get the figcaption elements enumerated:</p>
+
+<figcaption class="listing">Enumerated figure captions</figcaption>
+<iframe class="no-borders" style="height: 120px" src="counter-test-1.htm"></iframe> 
+
+<p>Now, how does that work?</p>
+
+<p>The CSS counter component consists of a single CSS file, and is imported in <tt>page.css</tt>:</p>
+
+<figcaption class="listing">Importing the counter component in page.css</figcaption><pre>
+@import url( colors.css );
+@import url( header-2.css );
+@import url( footer-2.css );
+@import url( toolbar/toolbar-2.css );
+@import url( collapsible/collapsible-5.css );
+@import url( navigation/navigation-3.css );
+@import url( <hi>counter.css</hi> );
+</pre>
+
+<p>The content of the file is rather simple. The first instruction defines a counter reset on the BODY element for three different counters:</p>
+
+<figcaption class="listing">CSS rules for the predefined counters</figcaption><pre>
+body { counter-reset : listing-counter figure-counter table-counter ; }
+</pre>
+
+<p>The following rule increments the listing counter on every <tt>figcaption</tt> element of class <tt>listing</tt>, and generates the formatted counter value in front of the element's text content:</p>
+
+<figcaption class="listing">CSS rules for the predefined counters</figcaption><pre>
+figcaption.listing:before { 
+	counter-increment : listing-counter ; 
+	content : "Listing " counter( listing-counter ) ": " ; 
+	}
+</pre>
+
+<p>If you create this HTML code, &hellip;</p>
+
+<figcaption class="listing">CSS rules for the predefined counters</figcaption><pre>
+&lt;figcaption class="listing"&gt;The code to be demonstrated&lt;/figcaption&gt;
+</pre>
+
+<p>&hellip; you will get the following listing title:</p>
+
+<figcaption class="listing">The generated title text</figcaption><pre>
+Listing 1: The code to be demonstrated
+</pre>
+
+<p>Likewise, the following rules generate text content for figcaption elements of class <tt>figure</tt>, <tt>table</tt> and table captions of class <tt>autonum</tt>:</p>
+
+<figcaption class="listing">Counter rules for the figures and tables</figcaption><pre>
+figcaption.figure:before { 
+	counter-increment : figure-counter; 
+	content : "Figure " counter(figure-counter) ": " ; 
+	}
+
+figcaption.table:before { 
+	counter-increment : table-counter; 
+	content : "Table " counter(table-counter) ": " ; 
+	}
+
+table > caption.autonum:before { 
+	counter-increment : table-counter ; 
+	content : "Table " counter(table-counter) ": " ; 
+	}
+</pre>
+
+<p>More information about CSS counters an nested counters can be found <a href="/web-development/css/css-counters.htm">here</a>.</p>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>

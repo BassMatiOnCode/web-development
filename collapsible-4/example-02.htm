@@ -1,0 +1,36 @@
+<html><head>
+<style>
+[cbc] { 
+	font-weight : normal ; 
+	}
+[cbc]+* {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s ease-out;
+  background-color : #E0E0E0;
+}
+</style>
+</head><body>
+<h4 cbc>Click on this to expand/collapse the content block</h4><div>
+content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content
+</div>
+
+<script type="module">
+const controllers = document.querySelectorAll( "[cbc]" );
+for ( let i = 0; i < controllers.length; i++ ) {
+	const controller = controllers[ i ];
+	controller.addEventListener( "click", function ( ) {
+		const block = this.nextElementSibling;
+		if ( block.style.maxHeight === "none" ) {
+			block.style.maxHeight = block.scrollHeight + "px" ;
+			window.requestAnimationFrame( function ( ) { 
+				block.style.maxHeight = "0px" ;
+				} ) ; }
+		else block.style.maxHeight = block.scrollHeight + "px";
+		} ) ;
+	controller.nextElementSibling.addEventListener( "transitionend", function ( ) { 
+		// Remove max height limitation if block was expanded so that the block can grow further if the page layout enforces this.
+		if ( this.style.maxHeight !== "0px" ) this.style.maxHeight = "none" ;
+		} ) ; }
+</script>
+</body></html>

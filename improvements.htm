@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm"version="2021-08-23" editor-name="usp" />
+<meta name="author" content="usp" />
+<meta name="creation-date" content="2021-08-20" />
+<meta name="editor" content="usp" />
+<meta name="change-date" content="2021-08-22" />
+<meta name="version" content="2" />
+<meta name="categories" content="Web Development > Web Design Toolbox" />
+<meta name="tags" content="web, design, toolbox, programming, improvements." />
+<meta name="description" content="Several things can be improved in the future." />
+
+<link rel="stylesheet" href="/inc/page.css" />
+ 
+<title>Web Design Toolboox - Improvements</title>
+
+</head><body><div id="page-header"></div><div id="main-toolbar"></div><div id="content">
+
+<h1>Improvements</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>Page Loading Flicker</h2><div>
+
+<p>When a page is loaded, the header and toolbar elements at the top do not exist at first, they are loaded after the inital page rendering. This leads to visual flicker. Additionally, the page content jumps down abruptly when the elements are inserted at the top.</p>
+
+<p>Ideas for improvement:</p>
+
+<p>First approach reserves space at the top of the document for header with a blue-colored border and some additional white padding for the toolbar. When the toolbar is loaded, the additioanl padding is reduced to normal size. When the header is loaded, the top border is removed.</p>
+
+<p>Second approach: Header and toolbar containers are created in a script in the HEAD element.</p>
+
+<p>Third approach: Toolbar and header initially have zero height. After loading, they are expanded to full height with a smooth transition.</p>
+
+<p>Fourth approach: New documents are loaded into the content container element. This effectively makes the website to a single-page application. Relative URLs must be adjusted according to the path of the new document.</p>
+
+<p>The first approach worked partially. The top border does not extend to the full width, there are white areas on the sides, cause by the body's left and right margins.</p>
+
+</div>
+
+<h2 cbc>Linking to Elements on the Page</h2><div>
+
+<p>An element with an ID attribute can serve as a link target. It is specified in the hash part of the URL:</p>
+
+<pre>some-page.htm#target-element</pre>
+
+<p>The browser then scrolls the content up to bring the target element into view. The default position is the window top. Unfortunately, this area is obscured by the toolbar. To countermeasure that, the content must be scrolled down at least by the height of the toolbar(s). Every navigation event must be captured, including initial page loading, and clicks on page-internal links.</p>
+
+</div>
+
+</div><script type="module" src="/inc/page.js" ></script></body></html>
