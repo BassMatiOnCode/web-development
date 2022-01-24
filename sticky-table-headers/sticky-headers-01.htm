@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head><body>
+
+<p>DIY Table Clone Test 1: Borders</p>
+
+<p>The style setting <tt>border-collpase:collapse</tt> on the table, combined with something like <tt>border : 1px solid silver</tt> on table cells should give a nice one-pixel border around table cells. While Firefox does it right, Chrome and Edge spoiled it: The border thickness varies unpleasantly at regular intervals. This first step addresses that with <tt>border-collapse:separate</tt> (which is the dafault) and <tt>border-spacing:0</tt> addresses this flaw. To obtain a one-pixel border, table cell will have a border line at the bottom and right side:</p>
+
+<pre>
+table.sticky-headers {
+	border-spacing : 0 ;
+	}
+table.sticky-headers tr * {
+	border-color : #CCC ;
+	border-width : 1px ;
+	border-bottom-style : solid ;
+	border-right-style : solid ;
+	}
+</pre>
+
+<p>Every first cell in a row needs an additional left border:</p>
+
+<pre>
+table.sticky-headers :first-child tr * {
+	border-top-style : solid ;
+	}
+</pre>
+
+<p>The cells in the first row get an additional top border.</p>
+
+<pre>
+table.sticky-headers tr :first-child {
+	border-left-style : solid ;
+	}
+</pre>
+
+<p>Let's see if that works:</p>
+
+<style>
+table.sticky-headers {
+	border-spacing : 0 ;
+	}
+table.sticky-headers th {
+	font-weight : normal ; 
+	font-style : italic ;
+	}
+table.sticky-headers tr * {
+	border-color : #CCC ;
+	border-width : 1px ;
+	border-bottom-style : solid ;
+	border-right-style : solid ;
+	}
+table.sticky-headers :first-child tr * {
+	border-top-style : solid ;
+	}
+table.sticky-headers tr :first-child {
+	border-left-style : solid ;
+	}
+</style>
+
+<div class="sticky-table-container">
+<table class="sticky-headers"><thead><tr>
+	<th>Header 1</th>
+	<th>Header 2</th>
+	<th>Header 3</th>
+	<th>Header 4</th>
+	<th>Header 5</th>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr></tbody></table></div>
+
+</body></html>

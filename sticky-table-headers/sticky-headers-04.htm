@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head><body>
+
+<p>Adding a Sticky Header Column</p>
+
+<p>One additional rule makes the cells in the first table row sticky:</p>
+
+<pre>
+table.sticky-headers tr :first-child {
+	position : sticky ;
+	left : 0px ;
+	background-color : white ;
+	}
+table.sticky-headers :first-child tr:first-child :first-child {
+	z-index : 1 ;
+	}
+</pre>
+
+<p>A background color is required to prevent the data cells from shining through.</p>
+
+<style>
+table.sticky-headers {
+	border-spacing : 0 ;
+	white-space : nowrap ;
+	}
+table.sticky-headers th {
+	font-weight : normal ; 
+	font-style : italic ;
+	}
+table.sticky-headers tr * {
+	border-color : #CCC ;
+	border-width : 1px ;
+	border-bottom-style : solid ;
+	border-right-style : solid ;
+	}
+table.sticky-headers :first-child tr:first-child * {
+	position : sticky ;
+	top : 0px ;
+	background-color : white ;
+	}
+table.sticky-headers tr :first-child {
+	position : sticky ;
+	left : 0px ;
+	background-color : white ;
+	}
+table.sticky-headers :first-child tr:first-child :first-child {
+	z-index : 1 ;
+	}
+.sticky-table-container {
+	border : 1px solid silver ;
+	display : inline-block ;
+	width : auto ;
+	height : 100px ;
+	overflow-y : auto ;
+	width : 300px ;
+	overflow-x : auto ;
+	}
+</style>
+
+
+<div class="sticky-table-container" id="d-002"style="width : 300px">
+<table class="sticky-headers"><thead><tr>
+	<th>Header 1</th>
+	<th>Header 2</th>
+	<th>Header 3</th>
+	<th>Header 4</th>
+	<th>Header 5</th>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr></tbody></table></div>
+
+</body></html>

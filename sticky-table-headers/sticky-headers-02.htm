@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head><body>
+
+<p>Borders Continued</p>
+
+<p>This step adds a container element, a <tt>DIV</tt>. This container limits the visible height of the table inside, and provides scroll-bars if the table size exceeds its container. The container element also provides a border, so the table cells no longer have to provide top and left border lines. I kept the right border of the right-most cells, this gives a nice visual separation to the vertical scroll-bar.</p>
+
+<pre>
+.sticky-table-container {
+	border : 1px solid silver ;
+	display : inline-block ;
+	width : auto ;
+	height : 100px ;
+	overflow-y : auto ;
+	}
+</pre>
+
+<style>
+table.sticky-headers {
+	border-spacing : 0 ;
+	}
+table.sticky-headers th {
+	font-weight : normal ; 
+	font-style : italic ;
+	}
+table.sticky-headers tr * {
+	border-color : #CCC ;
+	border-width : 1px ;
+	border-bottom-style : solid ;
+	border-right-style : solid ;
+	}
+table.sticky-headers :last-child tr:last-child * {
+	border-bottom-style : none ;
+	}
+.sticky-table-container {
+	border : 1px solid silver ;
+	display : inline-block ;
+	width : auto ;
+	height : 100px ;
+	overflow-y : auto ;
+	}
+</style>
+
+<div class="sticky-table-container">
+<table class="sticky-headers"><thead><tr>
+	<th>Header 1</th>
+	<th>Header 2</th>
+	<th>Header 3</th>
+	<th>Header 4</th>
+	<th>Header 5</th>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr></tbody></table></div>
+
+<p>If we have a horizontal scroll-bar, it is best to add a bottom border on the cells in last table row:</p>
+
+<pre>
+table.sticky-headers :last-child tr:last-child * {
+	border-bottom-style : solid ;
+	}
+</pre>
+
+<style>
+#d-002 {
+	width : 300px ;
+	overflow-x : auto ;
+	}
+#d-002 table {
+	white-space : nowrap ;
+	}
+#d-002 table.sticky-headers :last-child tr:last-child *  {
+	border-bottom-style : solid ;
+	}
+</style>
+
+<div class="sticky-table-container" id="d-002"style="width : 300px">
+<table class="sticky-headers"><thead><tr>
+	<th>Header 1</th>
+	<th>Header 2</th>
+	<th>Header 3</th>
+	<th>Header 4</th>
+	<th>Header 5</th>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+</tr></tbody></table></div>
+
+</body></html>

@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head><body>
+
+<h1>DIY Table Clone</h1>
+
+<style>
+.outer.container {  /* provides horizontal scrolling */
+	width : 100% ;
+	height : auto ;
+	overflow-x : auto ;
+	}
+.inner.container {  /* provides vertical scrolling */
+	width : auto ;
+	height : 100% ;
+	overflow-y : auto ;
+	}
+.body {
+	border : 1px solid silver ;
+	padding : 3px ;
+	max-width : 100% ;
+	}
+.row.container {
+	display : inline-block ;
+	border : 1px solid silver ;
+	padding : 3px ;
+	white-space : nowrap ;
+	vertical-align : top ;
+	}
+.cell {
+	display : inline-block ;
+	width : auto ;
+	height : auto ;
+	min-width : 100px ;
+	max-width : 300px ;
+	min-height : 10px ;
+	border : 1px solid silver ;
+	white-space : normal ;
+	vertical-align : top ;
+	}
+</style>
+
+<div class="body">
+<div class="row container">
+<div class="cell">R1C1</div>
+<div class="cell">R1C2 This is a longer text, it might be wrapped, or not.</div>
+<div class="cell">R1C3</div>
+<div class="cell">R1C4</div>
+</div>
+</div>
+
+</body></html>
