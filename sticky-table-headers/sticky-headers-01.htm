@@ -3,77 +3,321 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="stylesheet" href="/inc/page.css" />
+
 </head><body>
-
-<p>DIY Table Clone Test 1: Borders</p>
-
-<p>The style setting <tt>border-collpase:collapse</tt> on the table, combined with something like <tt>border : 1px solid silver</tt> on table cells should give a nice one-pixel border around table cells. While Firefox does it right, Chrome and Edge spoiled it: The border thickness varies unpleasantly at regular intervals. This first step addresses that with <tt>border-collapse:separate</tt> (which is the dafault) and <tt>border-spacing:0</tt> addresses this flaw. To obtain a one-pixel border, table cell will have a border line at the bottom and right side:</p>
-
-<pre>
-table.sticky-headers {
-	border-spacing : 0 ;
-	}
-table.sticky-headers tr * {
-	border-color : #CCC ;
-	border-width : 1px ;
-	border-bottom-style : solid ;
-	border-right-style : solid ;
-	}
-</pre>
-
-<p>Every first cell in a row needs an additional left border:</p>
-
-<pre>
-table.sticky-headers :first-child tr * {
-	border-top-style : solid ;
-	}
-</pre>
-
-<p>The cells in the first row get an additional top border.</p>
-
-<pre>
-table.sticky-headers tr :first-child {
-	border-left-style : solid ;
-	}
-</pre>
-
-<p>Let's see if that works:</p>
-
 <style>
-table.sticky-headers {
-	border-spacing : 0 ;
+body { 
+	padding-bottom : 0px ;
 	}
-table.sticky-headers th {
+table {
+	white-space : nowrap ;
+	border-style : none ;
+	}
+table th {
 	font-weight : normal ; 
 	font-style : italic ;
 	}
-table.sticky-headers tr * {
-	border-color : #CCC ;
-	border-width : 1px ;
-	border-bottom-style : solid ;
-	border-right-style : solid ;
-	}
-table.sticky-headers :first-child tr * {
-	border-top-style : solid ;
+table.sticky-headers :first-child :first-child * {
+	position : sticky ;
+	top : 0px ;
+	background-color : white ;
+	border-top-style : none ;
 	}
 table.sticky-headers tr :first-child {
-	border-left-style : solid ;
+	border-left-style : none ;
 	}
 </style>
 
-<div class="sticky-table-container">
-<table class="sticky-headers"><thead><tr>
+<table class="flat-borders sticky-headers"><thead><tr>
 	<th>Header 1</th>
 	<th>Header 2</th>
 	<th>Header 3</th>
 	<th>Header 4</th>
 	<th>Header 5</th>
+	<th>Header 6</th>
+	<th>Header 7</th>
+	<th>Header 8</th>
+	<th>Header 9</th>
+</tr></thead><thead><tr class="rowgroup-header">
+	<th colspan="1">Group 1</th>
+	<td colspan="9"></td>
 </tr></thead><tbody><tr>
 	<th>Row 1</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
-</tr></tbody></table></div>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 7</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 8</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 9</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr></tbody><thead><tr class="rowgroup-header">
+	<th colspan="1">Group 2</th>
+	<td colspan="9"></td>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 7</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 8</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 9</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr></tbody><thead><tr class="rowgroup-header">
+	<th colspan="1">Group 3</th>
+	<td colspan="9"></td>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 7</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 8</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 9</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr></tbody></table>
 
 </body></html>

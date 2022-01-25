@@ -1,110 +1,374 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-US"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="stylesheet" href="/inc/page.css" />
+
 </head><body>
-
-<p>Adding a Sticky Header Column</p>
-
-<p>One additional rule makes the cells in the first table row sticky:</p>
-
-<pre>
-table.sticky-headers tr :first-child {
-	position : sticky ;
-	left : 0px ;
-	background-color : white ;
-	}
-table.sticky-headers :first-child tr:first-child :first-child {
-	z-index : 1 ;
-	}
-</pre>
-
-<p>A background color is required to prevent the data cells from shining through.</p>
-
 <style>
-table.sticky-headers {
-	border-spacing : 0 ;
-	white-space : nowrap ;
+body { 
+	padding-bottom : 0px ;
 	}
-table.sticky-headers th {
+table {
+	white-space : nowrap ;
+	border-style : none ;
+	padding-bottom : 0 ;
+	}
+table th {
 	font-weight : normal ; 
 	font-style : italic ;
 	}
-table.sticky-headers tr * {
-	border-color : #CCC ;
-	border-width : 1px ;
-	border-bottom-style : solid ;
-	border-right-style : solid ;
-	}
-table.sticky-headers :first-child tr:first-child * {
+table.sticky-headers :first-child :first-child * {
 	position : sticky ;
 	top : 0px ;
 	background-color : white ;
+	border-top-style : none ;
 	}
 table.sticky-headers tr :first-child {
+	border-left-style : none ;
 	position : sticky ;
 	left : 0px ;
 	background-color : white ;
 	}
-table.sticky-headers :first-child tr:first-child :first-child {
+table.sticky-headers :first-child :first-child :first-child {
 	z-index : 1 ;
 	}
-.sticky-table-container {
-	border : 1px solid silver ;
-	display : inline-block ;
-	width : auto ;
-	height : 100px ;
-	overflow-y : auto ;
-	width : 300px ;
-	overflow-x : auto ;
+table.sticky-headers thead:not(:first-child) * {
+	position : sticky ;
+	top : 27px ;
+	background-color : white ;
+	z-index : 1 ;
+	border-top-style : solid ;
+	}
+table.sticky-headers thead:not(:first-child) th {
+	z-index : 2 ;
+	overflow-x : visible ;
+	max-width : 60px ;
+	border-right-style : none ;
+	}
+table.sticky-headers thead[collapsible] th:first-child {
+	background-image : url( "/inc/collapsible/orange-minus.svg" );
+	background-position : 5px center ;
+	background-repeat : no-repeat ;
+	padding-left : 35px ;
+	}
+table.sticky-headers thead[collapsed] th:first-child {
+	background-image : url( "/inc/collapsible/orange-plus.svg" );
+	}
+table.sticky-headers thead[collapsed]+tbody {
+	display : none ;
 	}
 </style>
 
+<script>
+if ( typeof Synesis === "undefined" ) Synesis = { } ;
+if ( ! Synesis.Collapsible ) Synesis.Collapsible = { } ;
+Synesis.Collapsible.TableRowGroups = { 
+	initPage : function ( ) {
+		const controllers = document.querySelectorAll ( "thead[collapsible]" );
+		for ( let i = 0 ; i < controllers.length ; i ++ ) {
+			controllers[ i ].addEventListener( "click", function ( evt = window.event ) { 
+				console.debug( "click" );
+				evt.stopPropagation( );
+				evt.preventDefault( );
+				this.toggleAttribute( "collapsed" );
+				} ) ; }	 
+	}	}
+</script>
 
-<div class="sticky-table-container" id="d-002"style="width : 300px">
-<table class="sticky-headers"><thead><tr>
+<table class="flat-borders sticky-headers"><thead><tr>
 	<th>Header 1</th>
 	<th>Header 2</th>
 	<th>Header 3</th>
 	<th>Header 4</th>
 	<th>Header 5</th>
+	<th>Header 6</th>
+	<th>Header 7</th>
+	<th>Header 8</th>
+	<th>Header 9</th>
+</tr></thead><thead collapsible><tr>
+	<th colspan="1">Group 1 : The first group of rows</th>
+	<td colspan="9"></td>
 </tr></thead><tbody><tr>
 	<th>Row 1</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
 </tr><tr>
 	<th>Row 2</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
 </tr><tr>
 	<th>Row 3</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
 </tr><tr>
 	<th>Row 4</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
 </tr><tr>
 	<th>Row 5</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
 </tr><tr>
 	<th>Row 6</th>
 	<td>Column 2</td>
 	<td>Column 3</td>
 	<td>Column 4</td>
 	<td>Column 5</td>
-</tr></tbody></table></div>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 7</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 8</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 9</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr></tbody><thead collapsible><tr>
+	<th colspan="1">Group 2 : A second group of rows with an even longer caption</th>
+	<td colspan="9"></td>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 7</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 8</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 9</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr></tbody><thead collapsible><tr>
+	<th colspan="1">Group 3 : This is the last group of rows</th>
+	<td colspan="9"></td>
+</tr></thead><tbody><tr>
+	<th>Row 1</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 2</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 3</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 4</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 5</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 6</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 7</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 8</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr><tr>
+	<th>Row 9</th>
+	<td>Column 2</td>
+	<td>Column 3</td>
+	<td>Column 4</td>
+	<td>Column 5</td>
+	<td>Column 6</td>
+	<td>Column 7</td>
+	<td>Column 8</td>
+	<td>Column 9</td>
+</tr></tbody></table>
 
+<script>
+Synesis.Collapsible.TableRowGroups.initPage( );
+</script>
 </body></html>
