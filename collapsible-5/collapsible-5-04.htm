@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Demonstrates a collapsible tree structure based on unordered list (UL) elements." />
+<style>
+</style>
+<link rel="stylesheet" href="/inc/navigation/navigation-3.css" />
+<link rel="stylesheet" href="/inc/collapsible/collapsible-5.css" />
+
+</head><body>
+
+<ul class="collapsible" cbc-default="collapsed" cbc-no-override>
+<li>List Item List Item List Item END</li>
+<li>collapsible Item List Item List Item END
+	<ul>
+	<li>List Item List Item List Item List Item List Item END
+		<ul>
+		<li>List Item List Item List Item List Item List Item END</li>
+		</ul></li>
+	</ul></li>
+<li>List Item List Item List Item END
+	<ul>
+	<li>List Item List Item List Item List Item List Item END</li>
+	<li>List Item List Item List Item List Item List Item END</li>
+	<li>List Item List Item List Item List Item List Item END
+		<ul>
+		<li>List Item List Item List Item List Item List Item END
+			<ul>
+			<li>List Item List Item List Item List Item List Item END</li>
+			</ul></li>
+		<li>List Item List Item List Item List Item List Item END
+		<ul>
+		<li>List Item List Item List Item List Item List Item END
+			<ul>
+			<li>List Item List Item List Item List Item List Item END
+				<ul>
+				<li>List Item List Item List Item List Item List Item END</li>
+				</ul></li>
+			</ul></li>
+		</ul></li>
+		<li>List Item List Item List Item List Item List Item END</li>
+		<li>List Item List Item List Item List Item List Item END</li>
+		</ul></li>
+	<li>List Item List Item List Item List Item List Item END</li>
+	</ul></li>
+<li>List Item List Item List Item END
+	<ul>
+	<li>List Item List Item List Item List Item List Item END</li>
+	</ul></li>
+<li>List Item List Item List Item END
+	<ul>
+	<li>List Item List Item List Item List Item List Item END</li>
+	</ul></li>
+<li>List Item List Item List Item END</li>
+<li>List Item List Item List Item END</li>
+<li>List Item List Item List Item END</li>
+<li>List Item List Item List Item END</li>
+</ul>
+
+<script type="module">
+import { initPage as initCollapsibles } from "/inc/collapsible/collapsible-5.js" ;
+initCollapsibles( );
+</script>
+</body></html>
