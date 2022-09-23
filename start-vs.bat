@@ -1,1 +1,1 @@
-c:\progs\VS2022\Common7\IDE\devenv.com /command File.OpenProject d:\github\web-design-toolbox\
+"C:\Program Files\Microsoft Visual Studio\2022\Preview\Common7\IDE\devenv.com" D:\github\bassmati-on-code\web-toolbox

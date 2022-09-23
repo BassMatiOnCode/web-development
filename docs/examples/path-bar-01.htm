@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2022-07-12" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2022-07-12" />
+<meta name="version" content="1" />
+
+<style>
+div.path-bar { 
+	border : 1px darkorange ;
+	border-style : solid none solid none ;
+	height : 30px ;
+	position : relative ;
+	overflow : hidden ;
+	}
+div.path-bar div { 
+	display : inline-block ;
+	vertical-align : middle ;
+	width : auto ; 
+	line-height : 30px ;
+	border : 1px none silver ;
+	position : absolute ;
+	height : 30px ;
+}
+div.path-bar div.content {
+	left : 40px ;
+	overflow : hidden ;
+	white-space : nowrap ;
+	user-select: none ;
+	}
+div.path-bar div.scroll { 
+	background-repeat : no-repeat ;
+	background-position : center center ;
+	background-size : contain ;
+	background-color : white ;
+	border : 1px none red ;
+	width : 40px ;
+	height : 20px ;
+	top : 5px ;
+	}
+div.path-bar div.scroll.left { 
+	background-image : url(/inc/navigation/arrow-left.svg) ;
+	left : 0px ;
+	}
+div.path-bar div.scroll.right { 
+	background-image : url(/inc/navigation/arrow-right.svg) ;
+	right : 0px ;
+	}
+</style>
+
+</head><body>
+
+<div class="path-bar">
+<div class="content"><a href="">Some</a> &gt; <a href="">very</a> &gt; <a href="">deeply</a> &gt; <a href="">nested</a> &gt; <a href="">folder</a> &gt; <a href="/web/toolbox/index.htm">Web Toolbox</a> &gt; <a href="/web/toolbox/navigation.htm">Navigation</a> &gt; <a href="/web/toolbox/navigation/path-bar.htm">Path Bar</a></div><div class="scroll left"></div><div class="scroll right"></div>
+</div>
+
+<script>
+( function ( ) { 
+	const buttonWidth = 40 ;
+	const scrollIncrement = 50 ;
+	// Helper function
+	function setupPathBar ( pathbar ) {
+		let content = pathbar.getElementsByClassName( "content" )[ 0 ];
+		let buttons = pathbar.getElementsByClassName( "scroll" );
+		// left button event handler
+		pathbar.getElementsByClassName( "right" )[ 0 ].addEventListener( "click", function( ) { 
+			window.event.stopPropagation( );
+			window.event.preventDefault( );
+			content.style.left = Math.max( content.offsetLeft - scrollIncrement, pathbar.offsetWidth - content.offsetWidth - buttonWidth ) + "px" ;
+			} ) ;
+		// right button event handler
+		pathbar.getElementsByClassName( "left" )[ 0 ].addEventListener( "click", function( ) { 
+			window.event.stopPropagation( );
+			window.event.preventDefault( );
+			content.style.left = Math.min( content.offsetLeft + scrollIncrement, buttonWidth ) + "px" ;
+			} ) ;
+		}
+	// Add button event handlers
+	let pathbars = document.getElementsByClassName( "path-bar" );
+	for ( let i = 0 ; i < pathbars.length ; i ++ ) setupPathBar( pathbars[ i ] );
+	} ) ( ) ;
+</script>
+
+</body></html>

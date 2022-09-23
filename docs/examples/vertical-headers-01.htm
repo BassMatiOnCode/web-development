@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2022-07-12" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2022-07-12" />
+<meta name="version" content="1" />
+<meta name="categories" content="Web Technologies > Toolbox > HTML Tables, Web Technologies > Examples" />
+<meta name="tags" content="web, toolbox, HTML, CSS, table, vertical, header, example, demo" />
+
+<title>Web Design Toolbox > Vertical Table Headers Demo</title>
+
+<style>
+table { border-collapse : collapse }
+td { text-align : center }
+th { font-weight : normal }
+th, td { padding : 3px ;  border : 1px solid silver }
+tbody th { text-align : right }
+thead th { text-align : left }
+th.vertical-bottom-up,
+thead tr.vertical-bottom-up * {
+	writing-mode : vertical-rl ;
+	transform: rotate(180deg);
+	transform-origin:  center center;
+	}
+</style>
+
+</head><body>
+
+<h1>Vertical Table Headers Demo</h1>
+
+<table><thead><tr class="vertical-bottom-up">
+	<th> </th>
+	<th>January<br />01</th>
+	<th>February</th>
+	<th>March</th>
+	<th>April</th>
+	<th>Mai</th>
+	<th>June</th>
+	<th>July</th>
+	<th>August</th>
+	<th>September</th>
+	<th>October</th>
+	<th>November</th>
+	<th>December</th>
+</tr></thead><tbody><tr>
+	<th>Activities</th>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+</tr><tr>
+	<th>Events</th>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+</tr><tr>
+	<th>People</th>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+	<td> </td>
+</tr></tbody></table>
+
+</body></html>
