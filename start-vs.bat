@@ -1,1 +1,1 @@
-"C:\Program Files\Microsoft Visual Studio\2022\Preview\Common7\IDE\devenv.com" D:\github\bassmati-on-code\web-toolbox
+c:\tools\visualstudio.bat "%cd%"
