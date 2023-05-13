@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" version="2022-12-01" editor="USP" />
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2023-05-13" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2023-05-13" />
+<meta name="version" content="1" />
+<meta name="categories" content="Programming > SVG > Context Color Fix" />
+<meta name="tags" content="programming, SVG, JavaScript, context color fix" />
+<meta name="description" content="Verifies the code correctness." />
+
+<link rel="icon" type="image/png" href="/favicon.png" sizes="16x16" />
+<link rel="stylesheet" href="/inc/page.css" />
+<link rel="stylesheet" href="/site.css" />
+ 
+<title>Test</title>
+
+</head><body><header id="page-header"><object data="title.svg" type="image/svg+xml"></object></header><main id="page-content">
+
+<h1>Context Color Fix</h1>
+<h2>Interactive Test</h2>
+
+<!--Shared marker definitions-->
+<svg width="0" height="0">
+<defs>
+	<polygon id="arrowShape" points="0 0 16 6 0 12" />
+	<marker id="arrowHead" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="context-stroke" stroke="context-stroke" >
+		<use href="#arrowShape" />
+		</marker>
+	<marker id="arrowHeadHollow" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="none" stroke="context-stroke" >
+		<use href="#arrowShape" />
+		</marker>
+	<marker id="arrowHeadFilled" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="white" stroke="context-stroke" stroke-width="1.5" >
+		<use href="#arrowShape" />
+		</marker>
+	</defs>
+</svg>
+
+
+<figcaption class="figure">Lines with colored arrowheads</figcaption>
+<svg id="svg-01" widht="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver">
+<g stroke-width="2">
+<line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHead)"></line>
+<line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHead)"></line>
+</g>
+</svg>
+
+<p><input type="checkbox" /> Check if the arrow colors are equal to the line colors.</p>
+
+<figcaption class="figure">Lines with transparent arrowheads</figcaption>
+<svg id="svg-01" widht="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver">
+<g stroke-width="2">
+<line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHeadHollow)"></line>
+<line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHeadHollow)"></line>
+</g>
+</svg>
+
+<p><input type="checkbox" /> Check if the arrow stroke colors are equal to the line colors.</p>
+
+
+<figcaption class="figure">Lines with filled arrowheads</figcaption>
+<svg id="svg-01" widht="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver">
+<g stroke-width="2">
+<line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHeadFilled)"></line>
+<line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHeadFilled)"></line>
+</g>
+</svg>
+
+<p><input type="checkbox" /> Check if the arrow stroke colors are equal to the line colors.</p>
+
+
+</main><footer id="page-footer"></footer>
+<script type="module" src="/inc/page.js" ></script>
+<script type="module" >
+import { initPage } from "./svg-context-color-fix-1.js" ;
+initPage( );
+</script>
+</body></html>

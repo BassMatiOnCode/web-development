@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" version="2022-12-01" editor="USP" />
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2023-05-11" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2023-05-11" />
+<meta name="version" content="1" />
+<meta name="categories" content="Programming > SVG > SVG-Tools" />
+<meta name="tags" content="programming, SVG, toolbox" />
+<meta name="description" content="The fill and stroke color values 'context-stroke' and 'context-fill' currently don't work in browsers except Firefox. So a script is requried to fix the problem." />
+
+<link rel="icon" type="image/png" href="/favicon.png" sizes="16x16" />
+<link rel="stylesheet" href="/inc/page.css" />
+<link rel="stylesheet" href="/site.css" />
+ 
+<title>Web Toolbox - SVG Context Color Fix</title>
+
+</head><body><header id="page-header"><object data="title.svg" type="image/svg+xml"></object></header><div id="main-toolbar"></div><main id="page-content">
+
+<h1>SVG Context Color Fix</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>The Problem</h2><div>
+
+<p>Lines can have arrowheads markers. Polygons can also have makers at vertices, circles for instance. The marker fill and stroke colors can be specified with "context-stroke", which should cause the marker colors to be inherited from the line element. But in practice...</p>
+
+<figcaption class="figure">Lines with arrowheads</figcaption>
+<svg widht="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver">
+<defs>
+	<polygon id="arrowShape" points="0 0 16 6 0 12" />
+	<marker id="arrowHead" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="context-stroke" stroke="context-stroke" >
+		<use href="#arrowShape" />
+		</marker>
+	</defs>
+<g stroke-width="2">
+	<line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHead)"></line>
+	<line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHead)"></line>
+</g>
+</svg>
+
+<p>But at the time of writing (2023-05-01), the arrows are rendered with their default colors (black) in Edge and Chrome browsers. Instead, it should look like this:</p>
+
+<figcaption class="figure">Expected appearance</figcaption>
+<svg width="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver">
+<defs>
+	<polygon id="arrowShape" points="0 0 16 6 0 12" />
+	<marker id="arrowHeadGreen" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="green" stroke="green" >
+		<use href="#arrowShape" />
+		</marker>
+	<marker id="arrowHeadBlue" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="blue" stroke="blue" >
+		<use href="#arrowShape" />
+		</marker>
+	</defs>
+<g stroke-width="2">
+	<line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHeadGreen)"></line>
+	<line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHeadBlue)"></line>
+	</g>
+</svg>
+
+<p>The following listings show the SVG implementation. There are two lines with arrow heads, with stroke colors green and blue. Both reference <tt>arrowHead</tt> in the <tt>marker-end</tt> definition:</p>
+
+<figcaption class="listing">Lines with arrow-heads</figcaption>
+<pre>
+&lt;line x1="-140" x2="140" y1="10" y2="10" stroke="green" 
+    <hi>marker-end</hi>="url(<hi>#arrowHead</hi>)"&gt;&lt;/line&gt;
+&lt;line x1="-140" x2="140" y1="30" y2="30" stroke="blue" 
+    <hi>marker-end</hi>="url(<hi>#arrowHead</hi>)"&gt;&lt;/line&gt;
+</pre>
+
+<p>The marker is defined with a stroke-color set to context-stroke:</p>
+
+<figcaption class="listing">The marker definition</figcaption>
+<pre>
+&lt;marker id="<hi>arrowHead</hi>" markerUnits="userSpaceOnUse" 
+	overflow="visible" refX="16" refY="6" orient="auto-start-reverse" 
+	fill="<hi>context-stroke</hi>" stroke="<hi>context-stroke</hi>" &gt;
+	&lt;use href="#arrowShape" /&gt;
+	&lt;/marker&gt;
+</pre>
+
+<p>The marker definition uses an element with the ID <tt>arrowShape</tt> to define the shape of the arrow. It inherits the stroke and fill colors from its parent element.</p>
+
+<p>To get the desired result, we need a separete <tt>marker</tt> for each line color:</p>
+
+<figcaption class="listing">Cloned markers with individual colors</figcaption>
+<pre>
+&lt;marker id="<hi>arrowHeadGreen</hi>" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" 
+	fill="<hi>green</hi>" stroke="<hi>green</hi>" &gt;
+	&lt;use href="#arrowShape" /&gt;
+	&lt;/marker&gt;
+&lt;marker id="<hi>arrowHeadBlue</hi>" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" 
+	fill="<hi>blue</hi>" stroke="<hi>blue</hi>" &gt;
+	&lt;use href="#arrowShape" /&gt;
+	&lt;/marker&gt;
+&lt;line x1="-140" x2="140" y1="10" y2="10" 
+	stroke="<hi>green</hi>" marker-end="url(#<hi>arrowHeadGreen</hi>)"&gt;&lt;/line&gt;
+&lt;line x1="-140" x2="140" y1="30" y2="30" 
+	stroke="<hi>blue</hi>" marker-end="url(#<hi>arrowHeadBlue</hi>)"&gt;&lt;/line&gt;
+</pre>
+
+<p>This can be tedious, so I developed a script that does it automatically.</p>
+
+<!--h2--></div>
+
+<h2 cbc>The Fix</h2><div>
+
+<p>The implementations can be directly applied to existing SVG code, without modificaiton. The code extracts all the necessary information and modifies the SVG element content.</p>
+
+<p>The code defines two regular expression objects and a function.</p>
+
+<figcaption class="listing">The code</figcaption>
+<pre>
+export const cssColorParser = new RegExp( "rgb\\((\\d+), (\\d+), (\\d+)\\)" ); 
+export const cssUrlParser = new RegExp( "url\\s*\\(\\s*#([^)]+)\\)$" );
+export function fixMarkerContextColors ( svgs ) { ... }
+</pre>
+
+<p><tt>cssColorParser</tt> is used to parse CSS rgb() expressions and isolates the individual color values. <tt>cssUrlParser</tt> is used to parse CSS url() expressions and returns the address argument. The function <tt>fixMarkerContextColors</tt> implements the fix logic. It is supplied with an array of SVG elements that need to be fixed, like so:</p>
+
+<figcaption class="listing">Calling the fix function</figcaption>
+<pre>
+fixMarkerContextColors (
+	document.getElementsByTagName( "SVG" ));
+</pre>
+
+<p>Inside, there are two nested loops:</p>
+
+<figcaption>The outer loops</figcaption>
+<pre>
+svgs.forEach( svg => {
+	const elements = svg.querySelectorAll( "[marker-start],[marker-mid],[marker-end]" );
+	elements.forEach( (element) => { 
+		} ) ; 
+	} ) ;
+</pre>
+
+<p>The outer loop iterates over the SVG elements passed in the array argument. The inner loop processes all elements that have a marker attribute.</p>
+
+<p>Inside is a code that performs the following steps:</p>
+
+<ol>
+<li>Check if the element references a marker with context-stroke colors</li>
+<li>If so, build a marker ID that encodes the stroke color</li>
+<li>Then check if a marker with that ID already exists</li>
+<li>If not, duplicate that marker and replace the context-related colors with the stroke color of the referencing element</li>
+<li>Encode the color in the clone's ID</li>
+<li>Add the new marker to the SVG element</li>
+<li>Change the marker reference in the element attribute accordingly</li>
+</ol>
+
+<p>Let's begin with step 1:</p>
+
+<figcaption>Check if this element references a marker with context-stroke colors</figcaption>
+<pre>
+[ "marker-start", "marker-mid", "marker-end" ].forEach( ( attributeName ) => {
+	if ( ! element.hasAttribute( attributeName )) return ;
+	<cc>// Examine the id of the referenced marker element</cc>
+	const markerID =  element.getAttribute( attributeName ).match( cssUrlParser )[ 1 ];
+	const marker = svg.querySelector( `#${markerID}` );
+	<cc>// Check if the marker has an attribute with a context color</cc>
+	const fixFillAttribute = marker.hasAttribute( "fill" ) && marker.getAttribute( "fill" ).startsWith( "context-" ) || marker.hasAttribute( "stroke" ) && marker.getAttribute( "stroke" ).startsWith( "context-" );
+	if ( ! fixFillAttribute ) return ;
+</pre>
+
+<p>The code above defines an array with attribute names that might carry arrow marker references. The <tt>forEach</tt> method calls a function on each of these array elements. The first instruction of this function checks if the current element has that attribute. If not, we are done with the current attribute name. Otherwise, we will extract the ID of the referenced marker element and obtain a reference to it.</p>
+
+<p>The next part checks the marker's <tt>fill</tt> and <tt>stroke</tt> attributes. If one of them contains a value that begins with <tt>context-</tt>, we have a candidate. If not, we are done with the current attribute name.</p>
+
+<p>The next step creates a copy of the referenced marker and exchanges <tt>context-stroke</tt> and <tt>context-fill</tt> values with the stroke color value defined by the referencing element (e. g. a line, arc, polyline et cetera).</p>
+
+<figcaption>Building the color code</figcaption>
+<pre>
+<cc>// First, find, parse and convert the element's stroke color</cc>
+let m = window.getComputedStyle( element ).stroke.match( cssColorParser );
+const colorCode = `${(+m[1]).toString(16).padStart(2, "0")}${(+m[2]).toString(16).padStart(2, "0")}${(+m[3]).toString(16).padStart(2, "0")}`;
+</pre>
+
+<p>The ID of the new marker will have the original marker name with a hexadecimal color value suffix, something like <tt>markerName-00FF00</tt>. The CSS colors, as read from the computed style values, have the format <tt>rgb(r, g, b)</tt>, where r, g and b are integer decimal numbers. They are extracted with the <tt>cssColorParser</tt> regular expression, first converted to a (decimal) number, then converted to a hexadecimal string, and finally the three parts are concatenated and stored in the variable <tt>colorCode</tt>.</p>
+
+<p>If there is already a marker with the same name and color code, we are done and exit. If not, we have to duplicate the original marker and make adjustments to color attribute values and the ID.</p>
+
+<figcaption>Duplicate the original marker and make adjustments</figcaption>
+<pre>
+<cc>// Then check if a marker with that ID already exists</cc>
+if ( svg.querySelector( `#${marker.ID}-${colorCode}` )) return;
+		
+<cc>// If not, duplicate that marker</cc>
+const clone = marker.cloneNode( true );
+		
+<cc>// Modify the color values</cc>
+clone.id = `${marker.id}-${colorCode}` ;
+if ( clone.getAttribute( "stroke" ) === "context-stroke" ) clone.setAttribute( "stroke", `#${colorCode}` );
+if ( clone.getAttribute( "fill" ) === "context-stroke" ) clone.setAttribute( "fill", `#${colorCode}` );
+		
+<cc>// Change the marker reference in the element attribute accordingly.</cc>
+element.setAttribute( attributeName, `url( #${clone.id} )` );
+
+<cc>// Add the new marker to the SVG element</cc>
+marker.parentNode.appendChild( clone );
+} ) ;	
+</pre>
+
+<p>Finally, we add the new marker element to the SVG document.</p>
+
+<p>That's it. If everything goes right, we should have here two arrows with correctly colored arrowheads:</p>
+
+<figcaption class="figure">Lines with colored arrowheads</figcaption>
+<svg id="svg-01" widht="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver">
+<defs>
+	<polygon id="arrowShape" points="0 0 16 6 0 12" />
+	<marker id="arrowHead" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="context-stroke" stroke="context-stroke" >
+		<use href="#arrowShape" />
+		</marker>
+	</defs>
+<g stroke-width="2">
+<line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHead)"></line>
+<line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHead)"></line>
+</g>
+</svg>
+
+<p class="note">Note: The color <tt>context-fill</tt> does not make sense with markers, because they are usually applied to "open" geometries like lines and arcs, not rectangles, ellipses or closed paths.</p>
+
+</div><!-- h2 -->
+
+<h2 cbc>Limitations</h2><div>
+
+<p>If you have multiple SVG elements in your document, make sure that there is only one section with marker definitions, preferredly in a separete SVG element:</p>
+
+<figcaption>Shared (marker) definition</figcaption>
+<pre>
+&lt;svg width="0" height="0"&gt;
+&lt;defs&gt;
+	&lt;polygon id="arrowShape" points="0 0 16 6 0 12" /&gt;
+	&lt;marker id="arrowHead" markerUnits="userSpaceOnUse" overflow="visible" refX="16" refY="6" orient="auto-start-reverse" fill="context-stroke" stroke="context-stroke" &gt;
+		&lt;use href="#arrowShape" /&gt;
+		&lt;/marker&gt;
+	&lt;/defs&gt;
+&lt;/svg&gt;
+</pre>
+
+<p>This element should have a width and height set to zero because it contains only (invisible) definitions and should not have an effect on the page layout. The visible content should be defined in separate SVG elements without marker definitions, like so:</p>
+
+<figcaption>Central marker definition</figcaption>
+<pre>
+&lt;svg id="svg-01" widht="300" height="40" viewBox="0,0,300,40" style="border:1px solid silver"&gt;
+&lt;g stroke-width="2"&gt;
+&lt;line x1="-140" x2="140" y1="10" y2="10" stroke="green" marker-end="url(#arrowHead)"&gt;&lt;/line&gt;
+&lt;line x1="-140" x2="140" y1="30" y2="30" stroke="blue" marker-end="url(#arrowHead)"&gt;&lt;/line&gt;
+&lt;/g&gt;
+&lt;/svg&gt;
+</pre>
+
+<p>This pattern prevents the introduction of marker definitions with duplicate IDs, which will be ignored and thus produce unexpected results.</p>
+
+<!--h2--></div>
+
+<h2 cbc>Deployment and Usage</h2><div>
+
+<p>The code is published as JavaScript module in <a href="svg-context-color-fix-1.js"><tt>svg-context-color-fix-1.js</tt></a>.</p>
+
+<p>To use that module, include a <tt>script</tt> element at the end of the page</p>
+
+<figcaption>Integration into an HTML document</figcaption>
+<pre>
+&lt;script type="module" &lt;
+import { initPage } from "./svg-context-color-fix-1.js" ;
+initPage( );
+&lt;/script&lt;
+</pre>
+
+<p>If you want to fix SVG elements selectively, use the following code:</p>
+
+<figcaption>Selectively fixing SVG elements</figcaption>
+<pre>
+&lt;script type="module" &lt;
+import { fixMarkerContextColors } from "./svg-context-color-fix-1.js" ;
+fixMarkerContextColors( [ document.querySelectorAll( "svg.fixit" ) ] ) ;
+&lt;/script&lt;
+</pre>
+
+<p class="note">NOTE that if you have SVG elements loaded <em>asynchronously</em>, <tt>initPage()</tt> must be defered until all elements have been loaded and integrated into the DOM tree of the HTML document.</p>
+
+<!-- h2 --></div>
+
+<h2 cbc>Test</h2><div>
+
+<p>Navigate to <a href="./context-color-test.htm">context-color-test.htm</a>.</p>
+
+<!-- h2 --></div>
+
+</main><footer id="page-footer"></footer>
+<script type="module" src="/inc/page.js" ></script>
+<script type="module" >
+import { fixMarkerContextColors } from "./svg-context-color-fix-1.js" ;
+fixMarkerContextColors ( [ document.getElementById( "svg-01" ) ] ) ;
+</script>
+</body></html>
