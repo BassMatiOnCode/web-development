@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="template-info" file-name="empty.htm" version="2022-12-01" editor="USP" />
+<meta name="author" content="USP" />
+<meta name="creation-date" content="2023-05-15" />
+<meta name="editor" content="USP" />
+<meta name="change-date" content="2023-05-15" />
+<meta name="version" content="1" />
+<meta name="categories" content="Web > Toolbox > CSS" />
+<meta name="tags" content="programming, web, toolbox, css, component, figcaption, underlined" />
+<meta name="description" content="This component implements a CSS component that underlines figure captions correctly." />
+
+<link rel="icon" type="image/png" href="/favicon.png" sizes="16x16" />
+<link rel="stylesheet" href="/inc/page.css" />
+<link rel="stylesheet" href="/site.css" />
+ 
+<title>Web Toolbox > CSS Components > Underlined Figure Captions</title>
+
+</head><body><header id="page-header"><object data="../title.svg" type="image/svg+xml"></object></header><div id="main-toolbar"></div><main id="page-content">
+
+<h1>Underlined Figure Captions</h1>
+
+<p id="page-abstract"></p>
+
+<h2 cbc>The Problem</h2><div>
+
+<p>Figures (images) have captions. A horizontal line should separate caption and image.</p>
+
+<p>Here is the code:</p>
+
+<figure>
+<figcaption class="listing">The HTML code</figcaption>
+<pre>
+&lt;figure&gt;
+&lt;figcaption&gt;This is the image caption&lt;/figcaption&gt;
+&lt;hr /&gt;
+&lt;svg width="200" height="200"...&gt;
+&lt;text x="0" y="0"...&gt;SVG&lt;/text&gt;
+&lt;/svg&gt;
+&lt;/figure&gt;
+</pre>
+</figure>
+
+<p>Which renders as such:</p>
+
+<figure>
+<figcaption>This is the image caption</figcaption>
+<hr />
+<svg width="200" height="100" viewBox="-100,-50,200,100" style="background-color:lightgrey">
+<text x="0" y="10" text-anchor="middle" dominant-baseline="middle" fill="grey" font-size="100px">SVG</text>
+</svg>
+</figure>
+
+<p>The problem is that <tt>figure</tt> and <tt>figcaption</tt> are block elements, and therefore the line is a little bit too long and pronounced.</p>
+
+<!--h2--></div>
+
+<h2 cbc>Resolution</h2><div>
+
+<p>The measure here is to wrap the figure content in a <tt>div</tt> with a <tt>display</tt> style set to <tt>inline-block</tt>:</p>
+
+<figure>
+<figcaption class="listing">Contend wrapped in a DIV</figcaption>
+<pre>
+&lt;figure&gt;<hi>&lt;div&gt;</hi>
+&lt;figcaption&gt;This is the image caption&lt;/figcaption&gt;
+&lt;hr /&gt;
+&lt;svg width="200" height="100"...&gt;
+&lt;text x="0" y="10"...&gt;SVG&lt;/text&gt;
+&lt;/svg&gt;
+<hi>&lt;/div&gt;</hi>&lt;/figure&gt;
+</pre>
+</figure>
+
+<p>And add the following CSS rules to the document:</p>
+
+<figure>
+<figcaption class="listing">The CSS rules</figcaption>
+<pre>
+figure > div:has(>hr) {
+	display : inline-block ;
+	}
+</pre>
+</figure>
+
+<p>These rules rely on nested <tt>figure</tt>, <tt>div</tt> and <tt>hr</tt> elements. The first rule selects the <tt>div</tt> element followed by an <tt>hr</tt> element, and sets the <tt>display</tt> style to <tt>inline-block</tt>. This causes the width of the <tt>div</tt> element to be determined by its content. This is the <tt>figcaption</tt> or the image element, whichever is wider.</p>
+
+<p>The additional rules found in the implementation file <a href="underlined-figcaption.css">underlined-figcaption.css</a> adjust margins and padding, which is not directly related to the solution presented here.</p>
+
+<p>As a result, the horizontal ruler is sized correctly:</p>
+
+<figure><div>
+<figcaption>Correctly sized separator line between caption and image</figcaption>
+<hr />
+<svg width="200" height="100" viewBox="-100,-50,200,100" style="background-color:lightgrey">
+<text x="0" y="10" text-anchor="middle" dominant-baseline="middle" fill="grey" font-size="100px">SVG</text>
+</svg>
+</div></figure>
+
+<p>Note that the element after the horizontal ruler can be anything, not just an image as in the example.</p>
+
+<!--h2--></div>
+ 
+<h2 cbc>Distribution and Integration</h2><div>
+
+<p>The CSS module is implemented in <a href="underlined-figcaption.css">underlined-figcaption.css</a>. It is integrated in page.css with the following statement:</p>
+
+<figcaption class="listing">Integration in page.css</figcaption>
+<pre>
+@import url( css/underlined-figcaption.css );
+</pre>
+
+<!--h2--></div>
+
+</main><footer id="page-footer"></footer><script type="module" src="/inc/page.js" ></script></body></html>

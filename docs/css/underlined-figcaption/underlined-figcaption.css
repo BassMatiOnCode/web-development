@@ -1,0 +1,16 @@
+﻿/* underlined-figcaption.css    2023-05-15    usp */
+
+figure > div:has(>hr) {
+	display : inline-block ;
+	}
+figure > div:has(>hr) > figcaption {
+	padding-bottom : 0px ;
+	margin-top : 0px ;
+	}
+figure > div > hr {
+	margin-block-start : 1px ;
+	margin-block-end : 1px ;
+	}
+figure > div > hr + * {
+	margin-top : 10px ;
+	}
