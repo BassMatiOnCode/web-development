@@ -1,1 +1,9 @@
 .vs
+.supplement
+/docs/favicon.png
+/docs/site.css
+/start-msedge.bat
+/start-dev.bat
+/start-vs.bat
+/start-webserver.bat
+

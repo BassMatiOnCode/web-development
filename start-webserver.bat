@@ -1,3 +1,3 @@
 cd docs
-title web-server web toolbox
-deno-file-server
+start /min "webserver" deno-file-server
+cd ..
