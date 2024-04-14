@@ -22,6 +22,9 @@
 [cbc="expanded"]:before {
     background-image: url("orange-minus.svg") ;
 	}
+[cbc="collapsed"] + div {
+	overflow : hidden ;
+	}
 [cbc="collapsed"]:before {
     background-image : url("orange-plus.svg") ;
 	}

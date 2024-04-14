@@ -8,4 +8,5 @@
 /start-vs.bat
 /start-webserver.bat
 /docs/inc/
+*.bak
 
