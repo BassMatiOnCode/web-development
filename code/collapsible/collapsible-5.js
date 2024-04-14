@@ -121,7 +121,7 @@ function expand( controller ) {
 		block.style.height = "0px" ;
 		window.requestAnimationFrame (( function( ) { 
 			this.style.height = height ; 
-			block.style.overflowY = "hidden" ;
+			block.style.overflowY = "hidden" ; // 2024-04-14
 			} ).bind( block )) ;
 		}	)
 	controller.setAttribute( "cbc", "expanded" );
