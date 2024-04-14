@@ -2,8 +2,10 @@
 .supplement
 /docs/favicon.png
 /docs/site.css
+/docs/colors.css
 /start-msedge.bat
 /start-dev.bat
 /start-vs.bat
 /start-webserver.bat
+/docs/inc/
 

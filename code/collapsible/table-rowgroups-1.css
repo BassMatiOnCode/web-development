@@ -1,0 +1,16 @@
+/*
+ *		table-rowgroups-1.css
+ */
+
+table.sticky-headers thead[collapsible] th:first-child {
+	background-image : url( "/inc/collapsible/orange-minus.svg" );
+	background-position : 5px center ;
+	background-repeat : no-repeat ;
+	padding-left : 35px ;
+	}
+table.sticky-headers thead[collapsed] th:first-child {
+	background-image : url( "/inc/collapsible/orange-plus.svg" );
+	}
+table.sticky-headers thead[collapsed]+tbody {
+	display : none ;
+	}
